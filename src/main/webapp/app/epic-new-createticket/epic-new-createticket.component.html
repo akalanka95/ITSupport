@@ -1,0 +1,270 @@
+<jhi-up-bar></jhi-up-bar>
+
+
+<div class="row">
+    <div class="col-md-8">
+        <!--<nb-card style="border: solid #5ee8d5;">-->
+        <nb-card>
+            <nb-card-header><h4>Create Ticket</h4></nb-card-header>
+            <nb-card-body>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label >Product</label>
+
+                            <div class="dropdown">
+                                <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton6" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{selectCompanyProductName}}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton6">
+                                    <a class="dropdown-item" (click)="selectCompanyProduct(list)" *ngFor="let list of companyProductDetailsList" >{{list.companyProductModule.product_module.product.productName}}</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label >Product Category</label>
+
+                            <div class="dropdown">
+                                <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton9" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{selectProductTypeName}}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton9">
+                                    <a class="dropdown-item" *ngFor="let list of productTypeArray" (click)="selectProductTypeHardwareOrSoftware(list)" >{{list}}</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label >Ticket Priority</label>
+
+                            <div class="dropdown">
+                                <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{selectTicketPriorityName}}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton8">
+                                    <a class="dropdown-item" (click)="ticketPriority(list)" *ngFor="let list of ticketPriorityArray">{{list}}</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label >Type</label>
+
+                            <div class="dropdown">
+                                <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{selectTypeName}}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton8">
+                                    <a class="dropdown-item" (click)="selectType(list)" *ngFor="let list of ticketTypeArray">{{list}}</a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <h4>Fault Information</h4>
+                <hr>
+                <form name="f" role="form" novalidate  #f="ngForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label></label>
+                                <input name="subject" required
+                                       [(ngModel)]="newTicket.subject" #subject="ngModel"
+                                       type="text" class="form-control" minlength="6"  placeholder="Subject">
+                                <div *ngIf="subject.dirty && subject.invalid">
+                                    <small class="form-text text-danger"
+                                           *ngIf="subject.errors.minlength"
+                                    >
+                                        This field should be longer than 6 characters.
+                                    </small>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <editor name="description" [(ngModel)]="newTicket.description" apiKey="test" [init]="{plugins: 'link', branding: false , browser_spellcheck : true }"></editor>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <input #fileInput type="file" ng2FileSelect [uploader]="uploader" multiple/>
+
+                        <table style="margin-top: 10px">
+                            <tbody>
+                            <tr *ngFor="let item of uploader.queue">
+                                <th width="90%">
+                                    <span style="color: cornflowerblue;">{{ item.file.name}}({{item.file.size/1000000}} MB)</span>
+                                </th>
+                                <th class="text-center" width="10%">
+                                    <span (click)="item.remove()">delete</span>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <hr>
+
+                    <button type="submit"
+                            [disabled]="f.form.invalid || formCreateTicket"
+                            (click)="createNewTicket(3000)" class="btn btn-danger" style="float: right">Create Ticket</button>
+
+                </form>
+            </nb-card-body>
+
+        </nb-card>
+    </div>
+    <div class="col-md-4">
+        <nb-card>
+            <nb-card-header style="font-size: 0.8rem">PRODUCT INFORMATION</nb-card-header>
+            <nb-card-body>
+                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Warranty Expiry/Status</label>
+                                            <input  type="text" class="form-control"  placeholder="Warranty Expiry/Status">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="margin-bottom: 24px">AMC No</label>
+                                            <input  type="text" class="form-control"  placeholder="AMC No">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >AMC Expiry/status</label>
+                                            <input  type="text" class="form-control"  placeholder="AMC Expiry/status">
+                                        </div>
+                                    </div>
+                                </div>
+
+                <span [hidden]="hardware">
+                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Brand</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Model</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Serial No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                <div class="row" *ngFor="let list of newCompanyProductDetail">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input disabled type="text" class="form-control"  placeholder="Brand" value="{{list.companyProductModule.brand}}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input disabled  type="text" class="form-control"  placeholder="Model" value="{{list.companyProductModule.model}}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input disabled type="text" class="form-control"  placeholder="Serial No" value="{{list.companyProductModule.serialNo}}">
+                        </div>
+                    </div>
+                </div>
+                </span>
+
+
+                <span [hidden]="software">
+                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Module</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Description</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Version</label>
+                                        </div>
+                                    </div>
+                                </div>
+                <div class="row" *ngFor="let list of newCompanyProductDetail">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input disabled  type="text" class="form-control" value="{{list.companyProductModule.product_module.module.moduleName}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input  disabled type="text" class="form-control" value="{{list.companyProductModule.description}}" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input  disabled type="text" class="form-control" value="{{list.companyProductModule.version}}">
+                                        </div>
+                                    </div>
+                                </div>
+                </span>
+
+
+            </nb-card-body>
+        </nb-card>
+
+        <nb-card>
+                <nb-card-header style="font-size: 0.8rem">
+                    Project Manager
+                </nb-card-header>
+                <nb-card-body>
+
+                        <span *ngFor="let list of pmProductList">
+                           <div class="row">
+                                 <div class="col-md-4">
+                                    <img style="max-width: 60% ; margin-left: 40%;" src="https://image.ibb.co/jw55Ex/def_face.jpg"
+                                         class="img img-rounded img-fluid"/>
+                                </div>
+                                <div class="col-md-8">
+                                    {{list.user.firstName}}
+                                    {{list.user.telno}}
+                                    {{list.user.email}}
+                                </div>
+
+                            </div>
+                        <hr>
+
+                        </span>
+
+
+
+                </nb-card-body>
+            </nb-card>
+
+    </div>
+</div>
+
+
+
+
+
+

@@ -3,8 +3,13 @@ package com.epi.jhipster.service.dto;
 import com.epi.jhipster.config.Constants;
 
 import com.epi.jhipster.domain.Authority;
+import com.epi.jhipster.domain.Company;
+import com.epi.jhipster.domain.Department;
 import com.epi.jhipster.domain.User;
 
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -53,6 +58,18 @@ public class UserDTO {
 
     private Set<String> authorities;
 
+    private String userRole;
+
+    private String telno;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
     public UserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -73,6 +90,15 @@ public class UserDTO {
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());
+    }
+
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public Long getId() {
@@ -179,6 +205,14 @@ public class UserDTO {
         this.authorities = authorities;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -195,5 +229,21 @@ public class UserDTO {
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +
             "}";
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+    public String getTelno() {
+        return telno;
+    }
+
+    public void setTelno(String telno) {
+        this.telno = telno;
     }
 }

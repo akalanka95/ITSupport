@@ -1,7 +1,9 @@
 package com.epi.jhipster.web.rest;
 
 import com.epi.jhipster.config.Constants;
+import com.epi.jhipster.domain.Company;
 import com.epi.jhipster.domain.User;
+import com.epi.jhipster.repository.CompanyRepository;
 import com.epi.jhipster.repository.UserRepository;
 import com.epi.jhipster.security.AuthoritiesConstants;
 import com.epi.jhipster.service.MailService;
@@ -16,6 +18,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -65,6 +68,8 @@ public class UserResource {
 
     private final MailService mailService;
 
+
+
     public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
 
         this.userService = userService;
@@ -85,7 +90,7 @@ public class UserResource {
      * @throws BadRequestAlertException 400 (Bad Request) if the login or email is already in use
      */
     @PostMapping("/users")
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")or hasRole(\"" + AuthoritiesConstants.SUPERVISOR + "\")")
     public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws URISyntaxException {
         log.debug("REST request to save User : {}", userDTO);
 
@@ -114,7 +119,7 @@ public class UserResource {
      * @throws LoginAlreadyUsedException 400 (Bad Request) if the login is already in use
      */
     @PutMapping("/users")
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")or hasRole(\"" + AuthoritiesConstants.SUPERVISOR + "\") ")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) {
         log.debug("REST request to update User : {}", userDTO);
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(userDTO.getEmail());
@@ -148,7 +153,7 @@ public class UserResource {
      * @return a string list of the all of the roles
      */
     @GetMapping("/users/authorities")
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.ADMIN + "\") or hasRole(\"" + AuthoritiesConstants.SUPERVISOR + "\") ")
     public List<String> getAuthorities() {
         return userService.getAuthorities();
     }

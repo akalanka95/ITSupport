@@ -1,0 +1,211 @@
+<!--<nb-card>-->
+  <!--<nb-card-header>-->
+  <!--</nb-card-header>-->
+  <!--<nb-card-body>-->
+
+<jhi-up-bar></jhi-up-bar>
+
+<nb-card>
+    <nb-card-header>Add New Product</nb-card-header>
+</nb-card>
+ <div class="row">
+              <div class="col-sm-6">
+                  <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#addNewProduct">ADD NEW PRODUCT</button>
+              </div>
+          </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                  <div class="form-group">
+                      <label>Product</label>
+                      <div class="dropdown">
+                          <button style="width: 50%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              {{selectProductName}}
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                              <a class="dropdown-item" *ngFor="let list of productList" (click)="selectProductType(list)">{{list.productName}} - {{list.type}}</a>
+                          </div>
+                      </div>
+
+                      </div>
+              </div>
+          </div>
+
+
+          <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label >Module</label>
+
+                <div class="dropdown">
+                    <button style="width: 50%"  class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{selectModuleName}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                        <a class="dropdown-item" (click)="selectProductModule(list)" *ngFor="let list of moduleModelList">{{list.module.moduleName}}</a>
+                    </div>
+                </div>
+
+            </div>
+          </div>
+          </div>
+
+          <div class="row" [hidden]="softType">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="inputProductDescription">Description</label>
+              <input [(ngModel)]="companyProductModuleModel.description"  type="text" class="form-control" id="inputProductDescription" placeholder="Description">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="inputProductVersion">Version</label>
+              <input [(ngModel)]="companyProductModuleModel.version" type="text" class="form-control" id="inputProductVersion" placeholder="Version">
+
+            </div>
+          </div>
+        </div>
+
+          <div class="row" [hidden]="hardType">
+          <div class="col-sm-4">
+            <div class="form-group">
+                <label for="inputBrand">Brand</label>
+                <input [(ngModel)]="companyProductModuleModel.brand" type="text" class="form-control" id="inputBrand" placeholder="Brand">
+            </div></div>
+          <div class="col-sm-4">
+            <div class="form-group">
+                <label for="inputModel">Model</label>
+                <input [(ngModel)]="companyProductModuleModel.model"  type="text" class="form-control" id="inputModel" placeholder="Model">
+            </div></div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="inputSerialNo">Serial No</label>
+              <input [(ngModel)]="companyProductModuleModel.serialNo"  type="text" class="form-control" id="inputSerialNo" placeholder="Serial No">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" (click)="createProductModule()">Create Product</button>
+
+
+<nb-card>
+    <nb-card-body>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr jhiSort >
+                    <th><span>Product</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                    <th><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                    <th><span>Module</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                    <th><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                    <th><span>Version</span></th>
+                    <th><span>Brand</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                    <th><span>Model</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                    <th><span>Serial No</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let list of companyProductModuleList">
+                    <td>{{list.product_module.product.productName}}</td>
+                    <td>{{list.product_module.product.type}}</td>
+                    <td>{{list.product_module.module.moduleName}}</td>
+                    <td>{{list.description}}</td>
+                    <td>{{list.version}}</td>
+                    <td>{{list.brand}}</td>
+                    <td>{{list.model}}</td>
+                    <td>{{list.serialNo}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+
+
+<div class="modal fade" id="addNewProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel123" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel123">ADD NEW PRODUCT</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                         <div class="form-group">
+                        <label >PRODUCT NAME</label>
+                        <input  name="reason"  type="text" class="form-control" [(ngModel)]="newProduct.productName" >
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+
+                                <div class="dropdown">
+                                    <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {{selectHardwareTypeName}}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
+                                        <a class="dropdown-item" (click)="selectNewProductType(list)" *ngFor="let list of productTypeArray">{{list}}</a>
+                                    </div>
+                                </div>
+
+                        </div>
+                        </div>
+                    </div>
+
+                    Module Name
+                    <div class="row">
+                        <div class="col-md-12">
+                         <div class="form-group">
+                             <input  name="reason22222"  type="text" class="form-control" [(ngModel)]="module1.moduleName" >
+                         </div>
+                        </div>
+                        </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input  name="reason222"  type="text" class="form-control" [(ngModel)]="module2.moduleName" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input  name="reason222"  type="text" class="form-control" [(ngModel)]="module3.moduleName" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input  name="reason22"  type="text" class="form-control" [(ngModel)]="module4.moduleName" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input  name="reason2"  type="text" class="form-control" [(ngModel)]="module5.moduleName" >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <button style="float: right"  data-dismiss="modal" (click)="addNewProduct()" class="btn btn-sm btn-danger">ADD PRODUCT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

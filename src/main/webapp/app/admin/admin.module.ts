@@ -18,11 +18,13 @@ import {
     JhiDocsComponent,
     JhiTrackerComponent
 } from './';
+import { NbCardModule } from '@nebular/theme';
 
 @NgModule({
     imports: [
         Jhipstersupport3SharedModule,
-        RouterModule.forChild(adminState)
+        RouterModule.forChild(adminState),
+        NbCardModule
         /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
     ],
     declarations: [

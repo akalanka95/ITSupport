@@ -21,3 +21,80 @@ Main page styles
         background-size: contain;
     }
 }
+
+// blink row
+@-webkit-keyframes blink {
+    50% {
+        background: rgba(255, 0, 0, 0.5);
+    }
+}
+@-moz-keyframes blink {
+    50% {
+        background: rgba(255, 0, 0, 0.5);
+    }
+}
+@keyframes blink {
+    50% {
+        background: rgba(255, 0, 0, 0.5);
+    }
+}
+.blink {
+    -webkit-animation-direction: normal;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: blink;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-direction: normal;
+    -moz-animation-duration: 5s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-name: blink;
+    -moz-animation-timing-function: linear;
+    animation-direction: normal;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-name: blink;
+    animation-timing-function: linear;
+}
+
+@-webkit-keyframes blink2 {
+    50% {
+        background: #0c8d73;
+    }
+}
+@-moz-keyframes blink2 {
+    50% {
+        background: #0c8d73;
+    }
+}
+@keyframes blink2 {
+    50% {
+        background: #0c8d73;
+    }
+}
+.blink2 {
+    -webkit-animation-direction: normal;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: blink2;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-direction: normal;
+    -moz-animation-duration: 5s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-name: blink2;
+    -moz-animation-timing-function: linear;
+    animation-direction: normal;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-name: blink2;
+    animation-timing-function: linear;
+}
+
+table {
+    width: 100%;
+}
+//table tr:nth-child(odd) {
+//    background: gray;
+//}
+.form-control {
+    font-size: 0.8rem;
+}

@@ -13,9 +13,13 @@ import {
     SettingsComponent,
     accountState
 } from './';
+import { NbCardModule } from '@nebular/theme';
+import { FileUploadModule } from 'ng2-file-upload';
+import { ReactiveFormsModule } from '@angular/forms';
+import { UpBarComponent } from 'app/up-bar/up-bar.component';
 
 @NgModule({
-    imports: [Jhipstersupport3SharedModule, RouterModule.forChild(accountState)],
+    imports: [ReactiveFormsModule, Jhipstersupport3SharedModule, FileUploadModule, NbCardModule, RouterModule.forChild(accountState)],
     declarations: [
         ActivateComponent,
         RegisterComponent,

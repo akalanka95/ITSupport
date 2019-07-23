@@ -13,6 +13,8 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+
+
 logging:
     level:
         ROOT: INFO
@@ -27,6 +29,13 @@ eureka:
             defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
 
 spring:
+    profiles:
+        include:
+            - no-swagger
+            - no-liquibase
+            - no-hystric
+            - no-metrics
+            - no-async
     devtools:
         restart:
             enabled: false

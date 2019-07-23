@@ -1,10 +1,8 @@
 package com.epi.jhipster.service;
 
 import com.epi.jhipster.config.Constants;
-import com.epi.jhipster.domain.Authority;
-import com.epi.jhipster.domain.User;
-import com.epi.jhipster.repository.AuthorityRepository;
-import com.epi.jhipster.repository.UserRepository;
+import com.epi.jhipster.domain.*;
+import com.epi.jhipster.repository.*;
 import com.epi.jhipster.security.AuthoritiesConstants;
 import com.epi.jhipster.security.SecurityUtils;
 import com.epi.jhipster.service.dto.UserDTO;
@@ -13,6 +11,7 @@ import com.epi.jhipster.web.rest.errors.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -39,6 +38,17 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthorityRepository authorityRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private ProductModuleRepository productModuleRepository;
+
+    @Autowired
+    private CompanyProductModuleRepository companyProductModuleRepository;
+
+
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
@@ -103,6 +113,7 @@ public class UserService {
         newUser.setEmail(userDTO.getEmail().toLowerCase());
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
+        newUser.setTelno(userDTO.getTelno());
         // new user is not active
         newUser.setActivated(false);
         // new user gets registration key
@@ -131,6 +142,22 @@ public class UserService {
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail().toLowerCase());
         user.setImageUrl(userDTO.getImageUrl());
+        user.setCompany(userDTO.getCompany());
+        user.setDepartment(userDTO.getDepartment());
+       // user.setCreatedDate(userDTO.getCreatedDate());
+//      user.setTelno(userDTO.getTelno().replaceFirst("7","94"));
+        user.setTelno("94"+userDTO.getTelno());
+        if ( userDTO.getUserRole() == null){
+            if(userDTO.getCompany().getCompanyName().equals("EPIC_LANKA")  ){
+                user.setUserRole("MANAGER");
+            } else {
+                user.setUserRole("CLIENT");
+            }
+
+        } else{
+            user.setUserRole(userDTO.getUserRole());
+        }
+
         if (userDTO.getLangKey() == null) {
             user.setLangKey(Constants.DEFAULT_LANGUAGE); // default language
         } else {
@@ -163,7 +190,7 @@ public class UserService {
      * @param langKey language key
      * @param imageUrl image URL of user
      */
-    public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
+    public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl ,String login ) {
         SecurityUtils.getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
             .ifPresent(user -> {
@@ -172,6 +199,8 @@ public class UserService {
                 user.setEmail(email.toLowerCase());
                 user.setLangKey(langKey);
                 user.setImageUrl(imageUrl);
+                user.setLogin(login);
+               // user.setTelno(telno);
                 log.debug("Changed Information for User: {}", user);
             });
     }
@@ -195,6 +224,7 @@ public class UserService {
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
+                user.setTelno("94"+userDTO.getTelno());
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO.getAuthorities().stream()

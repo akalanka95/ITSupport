@@ -8,6 +8,7 @@ import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { AccountService, UserService, User } from 'app/core';
 import { UserMgmtDeleteDialogComponent } from 'app/admin';
+import { ProductModuleService } from 'app/core/create-ticket/ProductModule.service';
 
 @Component({
     selector: 'jhi-user-mgmt',
@@ -26,6 +27,8 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+    currentUser: User = new User();
+    userListQA: User[] = [];
 
     constructor(
         private userService: UserService,
@@ -35,7 +38,8 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private router: Router,
         private eventManager: JhiEventManager,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private productService: ProductModuleService
     ) {
         this.itemsPerPage = ITEMS_PER_PAGE;
         this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -51,6 +55,10 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
             this.currentAccount = account;
             this.loadAll();
             this.registerChangeInUsers();
+        });
+
+        this.productService.getCurrentLoggedUser().subscribe((user: User) => {
+            this.currentUser = user;
         });
     }
 
@@ -136,6 +144,16 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = headers.get('X-Total-Count');
         this.users = data;
+
+        for (const list of this.users) {
+            if (list.department !== null) {
+                if (list.department.departmentName === 'QA') {
+                    this.userListQA.push(list);
+                } else {
+                    console.log('check');
+                }
+            }
+        }
     }
 
     private onError(error) {

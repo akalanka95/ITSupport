@@ -1,0 +1,1635 @@
+
+
+<jhi-up-bar></jhi-up-bar>
+
+<span  *ngIf="isLoaded" [hidden]="ticketDisplay">
+
+    <div class="row" style="margin-top: 10px;">
+
+        <div class="col-md-8">
+
+        <nb-card>
+
+            <nb-card-header (click)="viewTicketInfo()" [hidden]="ticketClosed" style="background: #090428; color: white">
+                <span *ngIf="(ticket.teamStatus === CLOSE || ticket.teamStatus === TiCKETCLOSED_ )">
+                        TICKET SUCCESSFULLY CLOSED
+                </span>
+            </nb-card-header>
+
+            <nb-card-body>
+                <!--image Adding part-->
+                <span *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'" >
+
+                    <span *ngIf="currentLoggedUser.department.departmentName === 'Support'">
+                         <span *ngIf="(ticket.teamStatus === 'REJECTED')">
+                            <div class="row" style="background-color: darkred;color:  white; margin: 10px;padding: 10px">
+                                Ticket is rejected by {{rejectedTicketAssignModel.user.firstName}}<br>
+                                Reason - {{rejectedTicketAssignModel.reason}}
+                            </div>
+                         </span>
+                    </span>
+                    <span *ngIf="currentLoggedUser.department.departmentName === 'QA'">
+                         <span *ngIf="( ticket.teamStatus === 'QA REJECTED' )">
+                             <div class="row" style="background-color: darkred;color:  white; margin: 10px;padding: 10px">
+                                 Ticket is rejected by {{rejectedTicketAssignModel.user.firstName}}<br>
+                                 Reason - {{rejectedTicketAssignModel.reason}}
+                             </div>
+                        </span>
+                    </span>
+                    <span *ngIf="currentLoggedUser.department.departmentName === 'Dev'">
+                         <span *ngIf="( ticket.teamStatus === 'DEV REJECTED' )">
+                                <div class="row" style="background-color: darkred;color:  white; margin: 10px;padding: 10px">
+                                     Ticket is rejected by {{rejectedTicketAssignModel.user.firstName}}<br>
+                                     Reason - {{rejectedTicketAssignModel.reason}}
+                                 </div>
+                        </span>
+                    </span>
+
+                </span>
+
+                <span *jhiHasAnyAuthority="'ROLE_TEAM'" >
+
+                    <span *ngIf="(currentLoggedQALeader === true && ticket.teamStatus === 'QA REJECTED' )">
+                        <div class="row" style="background-color: darkred;color:  white; margin: 10px;padding: 10px">
+                            Ticket is rejected by {{rejectedTicketAssignModel.user.firstName}}<br>
+                            Reason - {{rejectedTicketAssignModel.reason}}
+                        </div>
+                    </span>
+
+                    <span *ngIf="(currentLoggedDevLeader === true && ticket.teamStatus === 'DEV REJECTED' )">
+                        <div class="row" style="background-color: darkred;color:  white; margin: 10px;padding: 10px">
+                            Ticket is rejected by {{rejectedTicketAssignModel.user.firstName}}<br>
+                            Reason - {{rejectedTicketAssignModel.reason}}
+                        </div>
+                    </span>
+
+                </span>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <img style="width: 90px;height: 80px; margin-left: 30%;" [src]="clientImagePath"
+                             class="img img-rounded img-fluid img1"/>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="vl">
+                            <h4><b>{{ticket.subject}}</b></h4>
+                            <h5 style="color: green"><b>{{ticket.ticketNo}}</b></h5>
+                            <span *ngIf="ticket.priority ==='MEDIUM'"
+                                  class="badge badge-success">{{ticket.priority}}</span>
+                            <span *ngIf="ticket.priority ==='HIGH'" class="badge badge-info">{{ticket.priority}}</span>
+                            <span *ngIf="ticket.priority ==='HIGHEST'"
+                                  class="badge badge-danger">{{ticket.priority}}</span>
+                            <span *ngIf="ticket.priority ==='LOW'"
+                                  class="badge badge-primary">{{ticket.priority}}</span>
+                            <br>
+                            <h5>{{ticket.user1.firstName}} - {{ticket.user1.company.companyName}}</h5>
+                            <h5></h5>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label><h6>Type - {{ticket.type}}</h6></label><br>
+
+                        <label>
+
+                            <span *ngIf="ticket.teamStatus === 'QA ASSIGNED BY MANAGER'; else second" >
+                                 <h6>Status - QA ASSIGNED BY TEAM LEADER</h6>
+                             </span>
+                            <ng-template #second>
+                                <span *ngIf="ticket.teamStatus === 'DEV ASSIGNED BY MANAGER'; else third" >
+                                <h6>Status - DEV ASSIGNED BY TEAM LEADER</h6>
+                                </span>
+                            </ng-template>
+                            <ng-template #third>
+                                <span *ngIf="ticket.teamStatus === 'QA MANAGER REJECTED'; else fourth" >
+                                <h6>Status - QA TEAM LEADER REJECTED</h6>
+                                </span>
+                            </ng-template>
+                            <ng-template #fourth>
+                                <span *ngIf="ticket.teamStatus === 'DEV MANAGER REJECTED'; else fifth" >
+                                <h6>Status - DEV TEAM LEADER REJECTED</h6>
+                                </span>
+                            </ng-template>
+                            <ng-template #fifth>
+                                <h6>Status - {{ticket.teamStatus}}</h6>
+                            </ng-template>
+
+                        </label><br>
+                        <label><h6>Age - {{ticket.ticketAge}}</h6></label><br>
+                        <label><h6>Attachments - </h6></label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-6">
+
+                    </div>
+                    <div class="col-md-4">
+                        <span *ngFor="let list of ticketFileArray">
+                            <!--<h6 style="color: cornflowerblue">{{list.file_name}} by {{list.user.firstName}}</h6>-->
+                            <a href="../../content/uploades/{{list.file_name}}">{{list.file_name}}</a> by {{list.user.firstName}}<br>
+                        </span>
+                    </div>
+                </div>
+
+                <h4>Ticket History</h4>
+
+                <div class="row">
+                    <div class="col-md-12" [innerHTML]="ticket.description">
+                    </div>
+                </div>
+
+                <div class="container" #target>
+                    <div class="card ">
+                        <div class="card-body anyClass">
+                          <span *ngFor="let list of ticketCommentArrya">
+
+                              <span *ngIf="list.type === 'team'; else second">
+                                    <h2 class="background double">
+                                        <span>
+                                            <b>{{list.comment}} - {{list.ticketDate}} at - {{list.ticketTime}} by {{list.user.firstName}}
+                                            </b>
+                                        </span>
+                                    </h2>
+                              </span>
+
+                              <ng-template #second>
+                                  <span *ngIf="list.type === 'deleted'; else third">
+                                    <h2 class="background double">
+                                        <span>
+                                            <b>This comment is deleted by {{list.user.firstName}} - {{list.ticketDate}} at - {{list.ticketTime}}
+                                            </b>
+                                        </span>
+                                    </h2>
+                                  </span>
+                              </ng-template>
+
+                               <ng-template #third>
+                                  <span *ngIf="list.type === 'edited'; else fourth">
+
+                                        <div class="row" style="background: #eff3e1;
+
+padding: 10px;">
+                                            <div class="col-md-2">
+                                                 <img style="max-width: 40% ; margin-top: 10px;" src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid"/>
+                                            </div>
+
+                                            <div class="col-md-10">
+
+                                                 <p><a class="float-left" href="https://maniruzzaman-akash.blogspot.com/p/contact.html"><strong>{{list.user.firstName}}</strong></a>
+                                                 <br>
+                                                 <small class="text-secondary">{{list.ticketDate}} at {{list.ticketTime}}</small>
+                                                 <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                                                 <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                                                 </p>
+                                                 <div class="clearfix"></div>
+                                                 <p [innerHTML]="list.comment"></p>
+
+                                                <h2 class="background double">
+                                                    <span>
+                                                        <b>This comment is edited by {{list.user.firstName}} - {{list.ticketDate}} at - {{list.ticketTime}}
+                                                        </b>
+                                                    </span>
+                                                </h2>
+
+                                                 <p *ngIf="currentLoggedUser.id === list.user.id">
+                                                    <span *ngIf="list.ticket.teamStatus === CLOSE; else second">
+                                                        <a class="float-right  ml-2"> <i class="fa fa-reply"></i> Edit</a>
+                                                        <a class="float-right"> <i class="fa fa-heart"></i> Delete</a>
+                                                    </span>
+                                                     <ng-template #second>
+                                                        <a data-toggle="modal" (click)="editCom(list)" data-target="#editComment222" class="float-right  ml-2"> <i class="fa fa-reply"></i> Edit</a>
+                                                        <a data-toggle="modal" (click)="deleteCom(list)" data-target="#deleteComment11" class="float-right"> <i class="fa fa-heart"></i> Delete</a>
+                                                     </ng-template>
+
+                                                 </p>
+
+
+    <div class="modal fade" id="deleteComment11" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1111" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                     <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel1111">Delete Comment</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                 </button>
+                     </div>
+                    <div class="modal-body">
+                         Are you sure you want to delete the comment ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary" (click)="deleteComment()"
+                                              data-dismiss="modal">Delete</button>
+                    </div>
+                </div>
+         </div>
+  </div>
+
+     <div class="modal fade" id="editComment222" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2222" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+               <div class="modal-content">
+                     <div class="modal-header">
+                           <h5 class="modal-title" id="exampleModalLabel2222">Edit Comment</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                 </button>
+                      </div>
+                <div class="modal-body">
+                      <editor [init]="{plugins: 'link', branding: false , browser_spellcheck : true}" apiKey="test" [(ngModel)]="editCommentString"></editor>
+
+                 </div>
+                  <div class="modal-footer">
+                       <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                       <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal" (click)="editComment()">Edits</button>
+                  </div>
+                </div>
+           </div>
+      </div>
+                              </div>
+
+                                        </div>
+
+                                    <hr>
+
+
+                                   </span>
+                               </ng-template>
+
+                              <ng-template #fourth>
+
+                                  <div class="row" style="background: #eff3e1;padding: 10px;">
+                                       <div class="col-md-2">
+                                                <img style="max-width: 40%; margin-top: 10px;" src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid"/>
+                                         </div>
+
+                                       <div class="col-md-10">
+
+                                            <p>
+                                                 <a class="float-left" href="https://maniruzzaman-akash.blogspot.com/p/contact.html"><strong>{{list.user.firstName}}</strong></a>
+                                                 <br>
+                                                 <small class="text-secondary">{{list.ticketDate}} at {{list.ticketTime}}</small>
+                                                 <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                                                 <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                                            </p>
+                                            <div class="clearfix"></div>
+                                            <p [innerHTML]="list.comment"></p>
+                                            <p *ngIf="currentLoggedUser.id === list.user.id">
+                                                <span *ngIf="(list.ticket.teamStatus === 'CLOSE' || list.ticket.teamStatus === 'TICKET_CLOSE'); else second">
+                                                    <a class="float-right  ml-2"> <i class="fa fa-reply"></i> Edit</a>
+                                                    <a class="float-right"> <i class="fa fa-heart"></i> Delete</a>
+                                                </span>
+                                                <ng-template #second>
+                                                        <a data-toggle="modal" (click)="editCom(list)" data-target="#editComment" class="float-right  ml-2"> <i class="fa fa-reply"></i> Edit</a>
+                                                        <a data-toggle="modal" (click)="deleteCom(list)" data-target="#deleteComment" class="float-right"> <i class="fa fa-heart"></i> Delete</a>
+                                                </ng-template>
+                                            </p>
+
+ <div class="modal fade" id="deleteComment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                   <div class="modal-header">
+                         <h5 class="modal-title" id="exampleModalLabel1">Delete Comment</h5>
+                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span>
+                              </button>
+                   </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the comment ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary" (click)="deleteComment()" data-dismiss="modal">Delete</button>
+                    </div>
+             </div>
+        </div>
+ </div>
+
+ <div class="modal fade" id="editComment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+           <div class="modal-content">
+                 <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel2">Edit Comment</h5>
+                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span>
+                           </button>
+                 </div>
+                 <div class="modal-body">
+                           <editor apiKey="test" [init]="{plugins: 'link', branding: false , browser_spellcheck : true}" [(ngModel)]="editCommentString"></editor>
+                 </div>
+                 <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary"
+                                              data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary"
+                                              data-dismiss="modal" (click)="editComment()">Edit</button>
+                 </div>
+           </div>
+      </div>
+ </div>
+
+                                        </div>
+                                 </div>
+
+                                   <hr>
+
+                              </ng-template>
+
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <span *jhiHasAnyAuthority="'ROLE_TEAM'" [hidden]="openTicketStatusButton">
+                     <button class="btn btn-sm btn-danger float-right" data-toggle="modal" data-target="#openModal">Open Ticket</button>
+                </span>
+
+                <span *jhiHasAnyAuthority="'ROLE_TEAM'" [hidden]="teamAcceptReject">
+
+                <span *ngIf="currentLoggedUser.department.departmentName === 'Support'">
+                        <button style="float: right" (click)="acceptTicket()" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalAccept">Accept</button>
+                        <button style="float: right" (click)="rejectTicket()" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModalRejecting">Reject</button>
+
+                        <div class="modal fade" id="exampleModalRejecting" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel999" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel999">Reject Ticket</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form name="f" role="form" novalidate  #f="ngForm">
+                                      <div class="form-group">
+                                          <label >Reason</label>
+                                          <input  name="reason" required minlength="5" type="text" class="form-control" [(ngModel)]=" ticketRejectedReason" >
+
+                                      </div>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModelNew()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                        <div class="modal fade" id="modalAccept" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel111" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel111">Accept Ticket</h5>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="form-group">
+                                          <p>Are you sure you want to accept the Ticket ?</p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="acceptTicketModel()">Accept</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                </span>
+
+                <span *ngIf="currentLoggedUser.department.departmentName === 'QA'">
+
+                        <button  style="float: right" (click)="acceptTicket()" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalAccept12">Accept</button>
+                        <button style="float: right" (click)="rejectTicket()" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal12">Reject</button>
+
+                        <div class="modal fade" id="exampleModal12" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel12345" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel12345">Reject Ticket</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form name="f" role="form" novalidate  #f="ngForm">
+                                      <div class="form-group">
+                                          <label >Reason</label>
+                                          <input  name="reason" required minlength="5" type="text" class="form-control" [(ngModel)]=" ticketRejectedReason" >
+
+                                      </div>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModelQA()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                        <div class="modal fade" id="modalAccept12" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel12349911" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel12349911">Accept Ticket</h5>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="form-group">
+                                          <p>Are you sure you want to accept the Ticket ?</p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="acceptTicketModelQA()">Accept</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                </span>
+
+                <span *ngIf="currentLoggedUser.department.departmentName === 'Dev'">
+
+                        <button  style="float: right" (click)="acceptTicket()" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalAccept121">Accept</button>
+                        <button style="float: right" (click)="rejectTicket()" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal121">Reject</button>
+
+                        <div class="modal fade" id="exampleModal121" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel123451" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel123451">Reject Ticket</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form name="f" role="form" novalidate  #f="ngForm">
+                                      <div class="form-group">
+                                          <label >Reason</label>
+                                          <input  name="reason" required minlength="5" type="text" class="form-control" [(ngModel)]=" ticketRejectedReason" >
+
+                                      </div>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModelQA()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                        <div class="modal fade" id="modalAccept121" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1234991" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel1234991">Accept Ticket</h5>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="form-group">
+                                          <p>Are you sure you want to accept the Ticket ?</p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="acceptTicketModelQA()">Accept</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                </span>
+
+                </span>
+
+                <div class="modal fade" id="openModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel3">Assign Ticket</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Ticket Will be IN-PROGRESS if you open the Ticket
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button (click)="openTicket()" type="button" class="btn btn-primary"
+                                        data-dismiss="modal">Open Ticket
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <span *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'">
+
+                    <span *ngIf="currentLoggedUser.department.departmentName === 'Support'">
+
+                        <span *ngIf="(ticket.teamStatus === 'SUPPORT PENDING' || ticket.teamStatus === 'ACCEPTED' || ticket.teamStatus === 'REJECTED' || ticket.teamStatus === 'QA DONE'
+                            || ticket.teamStatus === 'SUPPORT INPROGRESS' || ticket.teamStatus === 'QA MANAGER REJECTED' || ticket.teamStatus === 'QA DONE - SUPPORT INPROGRESS'
+                            || ticket.teamStatus === 'QA DONE - SUPPORT PENDING' || ticket.teamStatus === 'QA DONE - SUPPORT ACCEPTED' || ticket.teamStatus === 'READY_FOR_TESTING'
+                             || ticket.teamStatus === 'READY FOR TESTING' || ticket.teamStatus === 'SUPPORT WAITING FOR FEEDBACK')">
+
+                            <h4>Action</h4>
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                  <editor [(ngModel)]="newTicketComment.comment"  [init]="{plugins: 'link', branding: false , browser_spellcheck : true}"></editor>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 10px;">
+
+                                <div class="col-md-12">
+                                    <input  #fileInput type="file" ng2FileSelect [uploader]="uploader" multiple/>
+
+                                    <table style="margin-top: 10px">
+                                        <tbody>
+                                            <tr *ngFor="let item of uploader.queue">
+                                                 <th width="90%">
+                                                    <span style="color: cornflowerblue;">{{ item.file.name}}({{item.file.size/1000000}} MB)</span>
+                                                 </th>
+                                                <th class="text-center" width="10%">
+                                                     <span (click)="item.remove()">delete</span>
+                                                </th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                 </div>
+
+                            </div>
+
+                            <hr>
+
+                        <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+                        <button class="btn  btn-dark float-right" data-toggle="modal" data-target="#reassignModal">TICKET REASSIGN</button>
+
+                        </span>
+
+                    </span>
+
+                    <span *ngIf="currentLoggedUser.department.departmentName === 'QA'">
+
+                        <span *ngIf="(ticket.teamStatus === 'QA ACCEPTED' || ticket.teamStatus === 'QA REJECTED' || ticket.teamStatus === 'QA INPROGRESS'
+                        || ticket.teamStatus === 'QA INPROGRESS' || ticket.teamStatus === 'QA ASSIGNED BY MANAGER'
+                        || ticket.teamStatus === 'DEV MANAGER REJECTED' || ticket.teamStatus === 'DEVELOPMENT DONE - QA INPROGRESS' || ticket.teamStatus === 'DEVELOPMENT DONE'
+                        || ticket.teamStatus === 'DEVELOPMENT DONE - QA PENDING' || ticket.teamStatus === 'DEVELOPMENT DONE - QA ACCEPTED'
+                        || ticket.teamStatus === 'SUPPORT ASSIGNED TO QA' || ticket.teamStatus === 'DEVELOPMENT DONE - QA REASSIGN REJECTED' || ticket.teamStatus === 'DEVELOPMENT DONE - QA REASSIGN PENDING REJECTED' || ticket.teamStatus === 'QA DONE - SUPPORT REJECTED'); else second">
+
+                            <h4>Action</h4>
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <editor [(ngModel)]="newTicketComment.comment" apiKey="test" [init]="{plugins: 'link', branding: false , browser_spellcheck : true}"></editor>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-12">
+                                    <input  #fileInput type="file" ng2FileSelect [uploader]="uploader" multiple/>
+
+                                        <table style="margin-top: 10px">
+                                            <tbody>
+                                                <tr *ngFor="let item of uploader.queue">
+                                                    <th width="90%">
+                                                        <span style="color: cornflowerblue;">{{ item.file.name}}({{item.file.size/1000000}} MB)</span>
+                                                    </th>
+                                                    <th class="text-center" width="10%">
+                                                        <span (click)="item.remove()">delete</span>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+                            <button class="btn btn-dark float-right"
+                                    data-toggle="modal"
+                                    data-target="#reassignModal">TICKET REASSIGN</button>
+
+                            <button class="btn btn-success float-right"
+                                    data-toggle="modal"
+                                    data-target="#reminderModel">Reminder</button>
+
+                        </span>
+
+                        <ng-template #second>
+                            <span *ngIf="ticket.teamStatus === 'QA REJECTED'">
+                                <button class="btn  btn-dark float-right" data-toggle="modal" data-target="#reassignModal">TICKET REASSIGN</button>
+                                <button type="button" class="btn  btn-danger float-right" data-toggle="modal" data-target="#exampleModal129">
+                                    Reject
+                                </button>
+
+                                <div class="modal fade" id="exampleModal129" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel59">Reject Ticket</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                             </div>
+                                            <div class="modal-body">
+                                                <form name="f" role="form" novalidate  #f="ngForm">
+                                                        <div class="form-group">Are you sure you want to reject ?
+
+
+                                                        </div>
+                                                </form>
+                                            </div>
+                                        <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModel()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+                                        </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            </span>
+                        </ng-template>
+
+                    </span>
+
+                    <span *ngIf="currentLoggedUser.department.departmentName === 'Dev'">
+                        <span *ngIf="(ticket.teamStatus === 'DEV ACCEPTED' || ticket.teamStatus === 'DEV INPROGRESS' || ticket.teamStatus === 'DEV REJECTED'
+                        || ticket.teamStatus === 'DEV ASSIGNED BY MANAGER' || ticket.teamStatus === 'DEVELOPMENT DONE - QA REJECTED'
+                         || ticket.teamStatus === 'QA ASSIGNED TO DEVELOPMENT'); else second">
+
+                             <h4>Action</h4>
+
+                             <hr>
+
+                             <div class="row">
+                                 <div class="col-md-12">
+                                    <editor [(ngModel)]="newTicketComment.comment" apiKey="test" [init]="{plugins: 'link', branding: false , browser_spellcheck : true}"></editor>
+                                 </div>
+                             </div>
+
+                             <div class="row" style="margin-top: 10px;">
+                                 <div class="col-md-12">
+                                    <input  #fileInput type="file" ng2FileSelect [uploader]="uploader" multiple/>
+
+                                        <table style="margin-top: 10px">
+                                            <tbody>
+                                                <tr *ngFor="let item of uploader.queue">
+                                                    <th width="90%">
+                                                        <span style="color: cornflowerblue;">{{ item.file.name}}({{item.file.size/1000000}} MB)</span>
+                                                    </th>
+                                                    <th class="text-center" width="10%">
+                                                        <span (click)="item.remove()">delete</span>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                 </div>
+                            </div>
+
+
+                             <hr>
+
+                            <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+
+                            <button class="btn  btn-dark float-right" data-toggle="modal" data-target="#reassignModal">TICKET REASSIGN</button>
+
+                            <button class="btn btn-success float-right" data-toggle="modal" data-target="#reminderModel">Reminder</button>
+
+                        </span>
+
+                        <ng-template #second>
+
+                            <span *ngIf="ticket.teamStatus === 'DEV REJECTED'">
+                                <button class="btn btn-sm btn-dark float-right" data-toggle="modal" data-target="#reassignModal">TICKET REASSIGN</button>
+                                <button type="button" class="btn btn-sm btn-danger float-right" data-toggle="modal" data-target="#exampleModal1297">
+                                    Reject
+                                </button>
+
+
+                                <div class="modal fade" id="exampleModal1297" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel597">Reject Ticket</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                </div>
+                                            <div class="modal-body">
+                                                    <form name="f" role="form" novalidate  #f="ngForm">
+                                                        <div class="form-group">
+                                                            <label>Reason</label>
+                                                            <input name="reason" required minlength="5" type="text" class="form-control" [(ngModel)]=" ticketRejectedReason">
+                                                        </div>
+                                                    </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModel()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+                                            </div>
+                                    </div>
+                            </div>
+                      </div>
+
+                            </span>
+
+                        </ng-template>
+
+                    </span>
+
+                    <div class="modal fade" id="reassignModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel77" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel77">Assign Ticket</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                     </button>
+                                </div>
+                                <div class="modal-body">
+                            <div class="form-group">
+                                <label>Assign To</label>
+
+                                 <div class="dropdown">
+                                        <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                {{selectAssignToName}}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton8">
+                                            <a class="dropdown-item"  (click)="selectTeamMember(list)" *ngFor="let list of assignStatusUserArray"> {{list.firstName}}&nbsp;&nbsp;{{list.lastName}}</a>
+                                        </div>
+                                 </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label>Comment</label>
+                                <editor apiKey="test" [init]="{plugins: 'link',branding: false , browser_spellcheck : true }"></editor>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button (click)="ticketReassign()" type="button" class="btn btn-primary" data-dismiss="modal">
+                                    Assign
+                                </button>
+                         </div>
+                    </div>
+                    </div>
+                    </div>
+
+                    <div class="modal fade" id="reminderModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel771" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                             <div class="modal-content">
+                                 <div class="modal-header">
+                                     <h5 class="modal-title" id="exampleModalLabel771">Reminder</h5>
+                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                     </button>
+                                 </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>To</label>
+                                    <input name="reminderEmailTo" [(ngModel)]="reminderEmailTo" type="email" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Subject</label>
+                                    <input  name="reminderSubject" [(ngModel)]="reminderSubject" type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Body</label>
+                                    <editor name="reminderEmailBody" [(ngModel)]="reminderEmailBody" apiKey="test" [init]="{plugins: 'link',branding: false , browser_spellcheck : true }"></editor>
+                                </div>
+                             </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button (click)="sendEmail()" type="button" class="btn btn-primary" data-dismiss="modal">
+                    Send
+                </button>
+            </div>
+        </div>
+                        </div>
+                    </div>
+
+                </span>
+
+                <span *jhiHasAnyAuthority="'ROLE_TEAM'" [hidden]="openTicketStatus">
+
+                     <h4>Action</h4>
+
+                     <hr>
+
+                     <div class="row">
+                        <div class="col-md-12">
+                            <editor [(ngModel)]="testcomment" apiKey="test" [init]="{plugins: 'link', branding: false , browser_spellcheck : true}"></editor>
+                         </div>
+                    </div>
+
+                     <div class="row" style="margin-top: 10px;">
+
+                        <div class="col-md-12">
+
+                        <input  #fileInput type="file" ng2FileSelect [uploader]="uploader" multiple/>
+
+                        <table style="margin-top: 10px">
+                            <tbody>
+                             <tr *ngFor="let item of uploader.queue">
+                                <th width="90%">
+                                    <span style="color: cornflowerblue;">{{ item.file.name}}({{item.file.size/1000000}} MB)</span>
+                                </th>
+                                <th class="text-center" width="10%">
+                                    <span (click)="item.remove()">delete</span>
+                                </th>
+                            </tr>
+                           </tbody>
+                        </table>
+
+                        </div>
+
+                    </div>
+
+                     <hr>
+
+
+                    <span *ngIf="((ticket.teamStatus === 'SUPPORT ASSIGNED TO QA' || ticket.teamStatus === 'QA ASSIGNED TO DEVELOPMENT' )); else second ">
+
+                        <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+                        <button class="btn btn-success float-right" data-toggle="modal"
+                                data-target="#exampleManagerModal">Assign To</button>
+
+                        <button type="button" class="btn btn-danger float-right" data-toggle="modal"
+                                data-target="#exampleModal1">
+                                    Reject
+                        </button>
+
+                        <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel5">Reject Ticket</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                             <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form name="f" role="form" novalidate  #f="ngForm">
+                                                <div class="form-group">
+                                                    Are you sure you want to reject ?
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModel()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+                                </div>
+                        </div>
+                      </div>
+                      </div>
+
+                    </span>
+
+                    <ng-template #second>
+                        <span *ngIf="currentLoggedQALeader === true; else third">
+                           <span *ngIf="((ticket.teamStatus === 'QA ASSIGNED BY MANAGER' || ticket.teamStatus === 'QA ACCEPTED' || ticket.teamStatus === 'QA INPROGRESS'
+                            || ticket.teamStatus === 'QA REJECTED' || ticket.teamStatus === 'DEVELOPMENT DONE - QA ACCEPTED' || ticket.teamStatus === 'DEVELOPMENT DONE - QA INPROGRESS') ) ">
+                            <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+                            <button class="btn btn-dark float-right"
+                                    data-toggle="modal"
+                                    data-target="#reassignModal1">TICKET REASSIGN</button>
+
+                            <button class="btn btn-success float-right"
+                                    data-toggle="modal"
+                                    data-target="#reminderModel1">Reminder</button>
+                            </span>
+
+                            <span *ngIf="((ticket.teamStatus === 'QA ASSIGNED TO DEVELOPMENT' || ticket.teamStatus === 'QA DONE'))">
+
+                            </span>
+
+                        </span>
+                    </ng-template>
+
+
+                    <ng-template #third>
+                        <span *ngIf="currentLoggedDevLeader === true; else fourth">
+                           <span *ngIf="((ticket.teamStatus === 'DEV ASSIGNED BY MANAGER' || ticket.teamStatus === 'DEV ACCEPTED' || ticket.teamStatus === 'DEV INPROGRESS'
+                            ) ) ">
+                            <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+                            <button class="btn btn-dark float-right"
+                                    data-toggle="modal"
+                                    data-target="#reassignModal1">TICKET REASSIGN</button>
+
+                            <button class="btn btn-success float-right"
+                                    data-toggle="modal"
+                                    data-target="#reminderModel1">Reminder</button>
+                            </span>
+
+                            <span *ngIf="((ticket.teamStatus === 'DEV REJECTED'))">
+                                <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+                                <button class="btn btn-dark float-right"
+                                    data-toggle="modal"
+                                    data-target="#reassignModal1">TICKET REASSIGN</button>
+
+                                <button class="btn btn-success float-right"
+                                    data-toggle="modal"
+                                    data-target="#reminderModel1">Reminder</button>
+
+                                <button type="button" class="btn btn-danger float-right" data-toggle="modal"
+                                        data-target="#exampleModal1">
+                                    Reject
+                                </button>
+
+  <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                   <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel5">Reject Ticket</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                   </div>
+              <div class="modal-body">
+                  <form name="f" role="form" novalidate  #f="ngForm">
+                      <div class="form-group">Are you sure you want to reject ?
+                      </div>
+                   </form>
+              </div>
+              <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModel()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+              </div>
+        </div>
+  </div>
+  </div>
+
+                             </span>
+
+                            <span *ngIf="((ticket.teamStatus === 'DEVELOPMENT DONE'))">
+
+                            </span>
+
+                        </span>
+                    </ng-template>
+
+
+                    <ng-template #fourth>
+
+                        <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+
+                        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="button" style="float: right" class="btn  btn-success" data-toggle="modal" data-target="#exampleModal">
+                            Assign To
+                        </button>
+
+                        <span *ngIf="newTicketUserTracker.ticketAssign.accepted !== 'SUPPORT ASSIGNED TO QA - HELP'">
+
+                            <button *jhiHasAnyAuthority="'ROLE_TEAM'" type="button" style="float: right" class="btn  btn-success" data-toggle="modal" data-target="#exampleModal">
+                                 Assign To
+                        </button>
+
+                        </span>
+
+                    </ng-template>
+
+                    <div class="modal fade" id="reassignModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel77" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel77">Assign Ticket</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            <div class="modal-body">
+                                 <div class="form-group">
+                                    <label>Assign To</label>
+
+                                    <div class="dropdown">
+                                        <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton8" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {{selectAssignToName}}
+                                         </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton8">
+                                    <a class="dropdown-item"  (click)="selectTeamMember(list)" *ngFor="let list of assignStatusUserArray"> {{list.firstName}}&nbsp;&nbsp;{{list.lastName}}</a>
+                                    </div>
+                                    </div>
+                            </div>
+                <div class="form-group">
+                    <label>Comment</label>
+                    <editor apiKey="test" [init]="{plugins: 'link',branding: false , browser_spellcheck : true }"></editor>
+                </div>
+            </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button (click)="ticketReassign()" type="button" class="btn btn-primary" data-dismiss="modal">
+                                Assign
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="modal fade" id="reminderModel1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel771" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                 <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel771">Reminder</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                             <span aria-hidden="true">&times;</span>
+                                        </button>
+                                 </div>
+                             <div class="modal-body">
+                                <div class="form-group">
+                                    <label>To</label>
+                                    <input type="email" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Subject</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Body</label>
+                                    <editor apiKey="test" [init]="{plugins: 'link',branding: false , browser_spellcheck : true }"></editor>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                 <button (click)="ticketReassign()" type="button" class="btn btn-primary" data-dismiss="modal">
+                                    Assign
+                                 </button>
+                             </div>
+                        </div>
+                        </div>
+                        </div>
+
+                </span>
+
+                <span *jhiHasAnyAuthority="'ROLE_USER'">
+
+                    <span *ngIf="(ticket.teamStatus === 'CLOSE' || ticket.teamStatus === 'TICKET_CLOSE' ); else second">
+                        TICKET SUCCESSFULLY CLOSED
+                    </span>
+
+                    <ng-template #second>
+                        <h4>Action</h4>
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <editor [(ngModel)]="newTicketComment.comment" apiKey="test" [init]="{plugins: 'link', branding: false, browser_spellcheck : true}"></editor>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-md-12">
+
+                                <input  #fileInput type="file" ng2FileSelect [uploader]="uploader" multiple/>
+
+                                <table style="margin-top: 10px">
+                                     <tbody>
+                                        <tr *ngFor="let item of uploader.queue">
+                                             <th width="90%">
+                                                    <span style="color: cornflowerblue;">{{ item.file.name}}({{item.file.size/1000000}} MB)</span>
+                                             </th>
+                                             <th class="text-center" width="10%">
+                                                 <span (click)="item.remove()">delete</span>
+                                             </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <span *ngIf="(ticket.teamStatus === 'SUPPORT DONE' || ticket.teamStatus === 'SUPPORT-DONE' || ticket.teamStatus === 'READY_FOR_TESTING'
+                        || ticket.teamStatus === 'READY FOR TESTING' || ticket.teamStatus === 'SUPPORT PENDING' || ticket.teamStatus === 'REJECTED')">
+
+                            <button  data-toggle="modal" data-target="#closeTicket" class="btn btn-dark" style="float: right">Close Ticket</button>
+
+                            <div class="modal fade" id="closeTicket" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel99"
+                                  aria-hidden="true">
+
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel99">CLOSE TICKET</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                FEED BACK
+                <div class="form-group">
+                    <editor apiKey="test" [init]="{plugins: ['link','emoticons'], branding: false , browser_spellcheck : true , toolbar: 'emoticons'}" [(ngModel)]="ticketCloseFeedback"></editor>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button (click)="closeTicket(ticket.teamStatus)" type="button" class="btn btn-primary" data-dismiss="modal">
+                    CLOSE TICKET
+                </button>
+            </div>
+        </div>
+                            </div>
+
+                            </div>
+
+                        </span>
+
+
+                        <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+
+                        <span *ngIf="ticket.teamStatus === 'SUPPORT WAITING FOR FEEDBACK'">
+
+                            <button  class="btn btn-dark" data-toggle="modal" data-target="#feddbackDone" style="float: right">FEEDBACK DONE</button>
+
+                            <button  data-toggle="modal" data-target="#closeTicket1" class="btn btn-dark" style="float: right">Close Ticket</button>
+
+                                <div class="modal fade" id="closeTicket1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel99"
+                                 aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel99">CLOSE TICKET</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                FEED BACK
+                <div class="form-group">
+                    <editor apiKey="test" [init]="{plugins: ['link','emoticons'], branding: false , browser_spellcheck : true , toolbar: 'emoticons'}"></editor>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button (click)="closeTicket(ticket.teamStatus)" type="button" class="btn btn-primary" data-dismiss="modal">
+                    CLOSE TICKET
+                </button>
+            </div>
+        </div>
+    </div>
+                            </div>
+
+                                <div class="modal fade" id="feddbackDone" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel991"
+                     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel991">FEEDBACK DONE</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    Please confirm you have successfully respond to the feedback request .
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button (click)="feedBackDone()" type="button" class="btn btn-primary" data-dismiss="modal">
+                     FEEDBACK DONE
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+                        </span>
+
+
+                            <button *jhiHasAnyAuthority="'ROLE_ADMIN'" type="button" style="float: right" class="btn  btn-success"
+                    data-toggle="modal" data-target="#exampleModal">
+              Assign To
+            </button>
+
+                            <button *jhiHasAnyAuthority="'ROLE_TEAM'" type="button" style="float: right" class="btn  btn-success"
+                      data-toggle="modal" data-target="#exampleModal">
+                Assign To
+            </button>
+
+                    </ng-template>
+
+                 </span>
+
+                <span *jhiHasAnyAuthority="'ROLE_TEAM'" [hidden]="openTicketDoneButton">
+
+                     <h4>Action</h4>
+
+                     <hr>
+
+                     <div class="row">
+
+                        <div class="col-md-12">
+                             <editor [(ngModel)]="newTicketComment.comment" apiKey="test" [init]="{plugins: 'link', branding: false, browser_spellcheck : true}"></editor>
+                        </div>
+
+                    </div>
+
+                     <div class="row" style="margin-top: 10px;">
+
+                         <div class="col-md-12">
+                                <input  #fileInput type="file" ng2FileSelect [uploader]="uploader" multiple/>
+
+                                <table style="margin-top: 10px">
+                                <tbody>
+                                     <tr *ngFor="let item of uploader.queue">
+                                        <th width="90%">
+                                         <span style="color: cornflowerblue;">{{ item.file.name}}({{item.file.size/1000000}} MB)</span>
+                                        </th>
+                                        <th class="text-center" width="10%">
+                                             <span (click)="item.remove()">delete</span>
+                                        </th>
+                                     </tr>
+                                </tbody>
+                            </table>
+                         </div>
+
+                    </div>
+
+                     <hr>
+
+                     <button (click)="saveTicketComment(target)" class="btn btn-danger" style="float: right">Post Comment</button>
+
+                     <button class="btn  btn-success float-right" data-toggle="modal"
+                            data-target="#acceptModal2">Accept</button>
+
+                     <button type="button" class="btn  btn-danger float-right" data-toggle="modal"
+                            data-target="#rejectModal23">
+                      <span *ngIf="currentLoggedUser.department.departmentName === 'Support'">
+                          Assign To QA
+                      </span>
+                      <span *ngIf="currentLoggedUser.department.departmentName === 'QA'">
+                          Assign To DEV
+                      </span>
+
+                     </button>
+              </span>
+
+            </nb-card-body>
+
+        </nb-card>
+
+    </div>
+
+        <div class="col-md-4">
+
+            <div class="row">
+               <button type="button" class="btn btn-outline-primary" style="margin-bottom: 10px;" data-dismiss="modal" (click)="ticketHistory()">Ticket History</button>
+                <br>
+                <nb-card>
+                    <nb-card-header>PRODUCT INFORMATION - {{ticket.user1.company.companyName}}</nb-card-header>
+                    <nb-card-body>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label >Warranty Expiry/Status</label>
+                                        <input  type="text" class="form-control"  placeholder="Warranty Expiry/Status">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="margin-bottom: 22px">AMC No</label>
+                                        <input  type="text" class="form-control"  placeholder="AMC No">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>AMC Expiry/status</label>
+                                        <input  type="text" class="form-control"  placeholder="AMC Expiry/status">
+                                    </div>
+                                </div>
+                            </div>
+
+                        <span [hidden]="displayHardware">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label >Module</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label >Brand</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label >Model</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label >Serial No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" *ngFor="let list of newCompanyProductDetails">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input disabled type="text" class="form-control"  placeholder="Module" value="{{list.companyProductDetails.companyProductModule.product_module.module.moduleName}}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input disabled type="text" class="form-control"  placeholder="Brand" value="{{list.companyProductDetails.companyProductModule.brand}}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input disabled  type="text" class="form-control"  placeholder="Model" value="{{list.companyProductDetails.companyProductModule.model}}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <input disabled type="text" class="form-control"  placeholder="Serial No" value="{{list.companyProductDetails.companyProductModule.serialNo}}">
+                        </div>
+                    </div>
+                </div>
+                         </span>
+
+
+                        <span [hidden]="!displayHardware">
+                            <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Module</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Description</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label >Version</label>
+                                        </div>
+                                    </div>
+                                </div>
+                <div class="row" *ngFor="let list of newCompanyProductDetails">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input disabled  type="text" class="form-control" value="{{list.companyProductDetails.companyProductModule.product_module.module.moduleName}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input  disabled type="text" class="form-control" value="{{list.companyProductDetails.companyProductModule.description}}" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input  disabled type="text" class="form-control" value="{{list.companyProductDetails.companyProductModule.version}}">
+                                        </div>
+                                    </div>
+                                </div>
+                </span>
+
+
+                    </nb-card-body>
+                </nb-card>
+            </div>
+
+            <!--Ticket Team List-->
+            <!--<div class="row">-->
+                <!--<nb-card>-->
+                    <!--<nb-card-header>-->
+                        <!--Team-->
+                    <!--</nb-card-header>-->
+                    <!--<nb-card-body>-->
+
+                        <!--<span *ngFor="let list of ticketTeamList">-->
+                           <!--<div class="row">-->
+                                 <!--<div class="col-md-4">-->
+                                    <!--<img style="max-width: 60% ; margin-left: 40%;" src="https://image.ibb.co/jw55Ex/def_face.jpg"-->
+                                  <!--class="img img-rounded img-fluid"/>-->
+                                <!--</div>-->
+                                <!--<div class="col-md-8">-->
+                                    <!--{{list.firstName}} ({{list.userRole}})-->
+                                    <!--{{list.telno}}-->
+                                    <!--{{list.email}}-->
+                                <!--</div>-->
+
+                            <!--</div>-->
+
+                            <!--<hr>-->
+
+                        <!--</span>-->
+
+                    <!--</nb-card-body>-->
+                <!--</nb-card>-->
+            <!--</div>-->
+
+        </div>
+
+
+    </div>
+
+</span>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Assign Ticket</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Assign To</label>
+
+                    <div class="dropdown">
+                        <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton81" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{selectAssignToName}}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton81">
+                            <a class="dropdown-item" (click)="selectStatus(list)" *ngFor="let list of assignStatusArray">
+                                <!--<span *ngIf="list === 'SUPPORT DONE'; else second">READY FOR TESTING</span>-->
+                                {{list}}
+                                </a>
+                        </div>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button (click)="assignTicket()" type="button" class="btn btn-primary" data-dismiss="modal">Assign
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="exampleManagerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel4">Assign Ticket</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Assign To</label>
+
+                    <div class="dropdown">
+                        <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton82" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{selectAssignToName}}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton82">
+                            <a class="dropdown-item" (click)="selectTeamMember(list)" *ngFor="let list of assignStatusUserArray"> {{list.firstName}} &nbsp;&nbsp;{{list.lastName}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button (click)="assignTicketByQAManager()" type="button" class="btn btn-primary" data-dismiss="modal">
+                    Assign
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rejectModal2" tabindex="-1" role="dialog" aria-labelledby="rejectModal2" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel123">Reject Ticket</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="f" role="form" novalidate  #f="ngForm">
+                    <div class="form-group">
+                        <label>Reason</label>
+                        <input name="reason" required minlength="5" type="text" class="form-control"
+                               [(ngModel)]=" ticketRejectedReason">
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button [disabled]="f.form.invalid" type="button" (click)=" rejectTicketModel()"
+                        class="btn btn-primary" data-dismiss="modal">Reject
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="acceptModal2" tabindex="-1" role="dialog" aria-labelledby="acceptModal2" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1234">Accept Ticket</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <p>Are you sure you want to accept the Ticket ?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="acceptTicketModelDone()">
+                    Accept
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rejectModal23" tabindex="-1" role="dialog" aria-labelledby="rejectModal234" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rejectModal234">Reject Ticket</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form name="f" role="form" novalidate  #f="ngForm">
+                    <div class="form-group">
+
+                        Are you sure you want to reject and reassign ?
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button [disabled]="f.form.invalid" type="button" (click)=" rejectTicketModel()"
+                        class="btn btn-primary" data-dismiss="modal">Reject
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<span [hidden]="ticketHistoryDisplay">
+    <div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header>
+               TICKET HISTORY
+                <button class="btn btn-sm btn-dark float-right" (click)="ticketDataDisplay()">Back</button>
+            </nb-card-header>
+            <nb-card-body>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Company/Department</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let list of listOfTicketLog">
+                            <td>{{list.user.firstName}}</td>
+                            <td>{{list.user.company.companyName}}</td>
+                            <td>{{list.ticketDate}}</td>
+                            <td>{{list.ticketTime}}</td>
+                            <td>{{list.action}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
+</span>
+
+
+
+

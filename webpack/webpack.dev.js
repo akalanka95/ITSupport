@@ -31,7 +31,12 @@ module.exports = (options) => webpackMerge(commonConfig({ env: ENV }), {
             target: `http${options.tls ? 's' : ''}://127.0.0.1:8080`,
             secure: false,
             changeOrigin: options.tls,
-            headers: { host: 'localhost:9000' }
+            headers: {
+                "Access-Control-Allow-Origin": "http://localhost:9000",
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, x-id, Content-Length, X-Requested-With",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                host: 'localhost:9000' }
         },{
             context: [
                 '/websocket'
@@ -151,5 +156,8 @@ module.exports = (options) => webpackMerge(commonConfig({ env: ENV }), {
             contentImage: path.join(__dirname, 'logo-jhipster.png')
         })
     ].filter(Boolean),
-    mode: 'development'
+    mode: 'development',
+
 });
+
+

@@ -8,6 +8,7 @@ import { AuthServerProvider } from '../auth/auth-jwt.service';
 
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
+import { TicketCommentModel } from '../TicketComment.model';
 
 @Injectable({ providedIn: 'root' })
 export class JhiTrackerService {
@@ -19,6 +20,8 @@ export class JhiTrackerService {
     listenerObserver: Observer<any>;
     alreadyConnectedOnce = false;
     private subscription: Subscription;
+
+    assignTicketCommentmodel: TicketCommentModel = new TicketCommentModel();
 
     constructor(
         private router: Router,
@@ -77,6 +80,12 @@ export class JhiTrackerService {
         return this.listener;
     }
 
+    sendActivity2(ticketComment: TicketCommentModel) {
+        if (this.stompClient !== null && this.stompClient.connected) {
+            this.stompClient.send('/topic/messages', JSON.stringify(ticketComment));
+        }
+    }
+
     sendActivity() {
         if (this.stompClient !== null && this.stompClient.connected) {
             this.stompClient.send(
@@ -90,9 +99,18 @@ export class JhiTrackerService {
     subscribe() {
         this.connection.then(() => {
             this.subscriber = this.stompClient.subscribe('/topic/tracker', data => {
+                this.listenerObserver.next(data);
+            });
+        });
+    }
+
+    subscribe2() {
+        this.connection.then(() => {
+            this.subscriber = this.stompClient.subscribe('/topic/comment', data => {
                 this.listenerObserver.next(JSON.parse(data.body));
             });
         });
+        //setTimeout('',5000);
     }
 
     unsubscribe() {

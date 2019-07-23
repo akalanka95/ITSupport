@@ -10,3 +10,15 @@ eg $input-color: red;
 @import '~bootstrap/scss/bootstrap';
 
 /* jhipster-needle-scss-add-vendor JHipster will add new css style */
+@import '~@nebular/bootstrap/styles/globals';
+
+@import '~bootstrap/dist/css/bootstrap.css';
+@import '~@nebular/theme/styles/prebuilt/default.scss';
+
+.nb-theme-default nb-layout .layout .layout-container .content .columns nb-layout-column {
+    padding: 0rem 2.25rem 0.75rem;
+}
+
+.nb-theme-default nb-layout .layout nb-layout-header nav {
+    padding: 0;
+}

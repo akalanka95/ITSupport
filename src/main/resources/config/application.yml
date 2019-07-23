@@ -16,7 +16,7 @@
 
 eureka:
     client:
-        enabled: true
+        enabled: false
         healthcheck:
             enabled: true
         fetch-registry: true
@@ -39,7 +39,7 @@ eureka:
             git-branch: ${git.branch:}
 ribbon:
     eureka:
-        enabled: true
+        enabled: false
 management:
     endpoints:
         web:
@@ -50,7 +50,7 @@ management:
         health:
             show-details: when-authorized
         jhi-metrics:
-            enabled: true
+            enabled: false
     info:
         git:
             mode: full
@@ -61,7 +61,7 @@ management:
         export:
             # Prometheus is the default metrics backend
             prometheus:
-                enabled: true
+                enabled: false
                 step: 60
         binders:
             jvm:
@@ -85,7 +85,17 @@ management:
             server:
                 auto-time-requests: true
 
+
 spring:
+    profiles:
+        # The commented value for `active` can be replaced with valid Spring profiles to load.
+        # Otherwise, it will be filled in by maven when building the WAR file
+        # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
+        active: prod #spring.profiles.active#
+    servlet:
+        multipart:
+          max-file-size: 10Mb
+          max-request-size: 15Mb
     application:
         name: jhipstersupport3
     jpa:
@@ -93,7 +103,7 @@ spring:
         properties:
             hibernate.jdbc.time_zone: UTC
         hibernate:
-            ddl-auto: none
+            ddl-auto: update
             naming:
                 physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
                 implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -136,7 +146,7 @@ jhipster:
         #allow-credentials: true
         #max-age: 1800
     mail:
-        from: jhipstersupport3@localhost
+        from: akalankamaduka95@gmail.com
     swagger:
         default-include-pattern: /api/.*
         title: jhipstersupport3 API
@@ -159,3 +169,4 @@ jhipster:
 # ===================================================================
 
 # application:
+

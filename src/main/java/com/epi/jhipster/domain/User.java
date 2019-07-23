@@ -23,7 +23,6 @@ import java.time.Instant;
  */
 @Entity
 @Table(name = "jhi_user")
-
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +30,63 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<PMProduct> pmProduct = new HashSet<>();
+
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Company_Product_Module> company_product_modules = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL)
+    private Set<Ticket> ticket = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<UserProductDetails> userProductDetails = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL)
+    private Set<UserProduct> userProduct= new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL)
+    private Set<UserProductQA> userProductQA = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<UserProductDev> userProductDev = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<TicketComment> ticketComment = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<TicketLog> ticketLog = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<TicketAssign> ticketAssign = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<TicketUserTracker> ticketUserTracker = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<TicketFiles> ticketFiles = new HashSet<>();
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -82,6 +138,12 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "reset_date")
     private Instant resetDate = null;
 
+    @Column(name = "user_role")
+    private String userRole;
+
+    @Column(name = "telno")
+    private String telno;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -89,8 +151,67 @@ public class User extends AbstractAuditingEntity implements Serializable {
         joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
 
+
+
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
+
+
+    private Instant createdDate;
+
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
+
+
+    public Set<TicketComment> getTicketComment() {
+        return ticketComment;
+    }
+
+    public void setTicketComment(Set<TicketComment> ticketComment) {
+        this.ticketComment = ticketComment;
+    }
+
+    public Set<UserProduct> getUserProduct() {
+        return userProduct;
+    }
+
+    public void setUserProduct(Set<UserProduct> userProduct) {
+        this.userProduct = userProduct;
+    }
+
+    public Set<Company_Product_Module> getCompany_product_modules() {
+        return company_product_modules;
+    }
+
+
+    public Set<UserProductDetails> getUserProductDetails() {
+        return userProductDetails;
+    }
+
+    public void setUserProductDetails(Set<UserProductDetails> userProductDetails) {
+        this.userProductDetails = userProductDetails;
+    }
+
+    public void setCompany_product_modules(Set<Company_Product_Module> company_product_modules) {
+        this.company_product_modules = company_product_modules;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+//    public Set<Ticket> getTicket() {
+//        return ticket;
+//    }
+//
+//    public void setTicket(Set<Ticket> ticket) {
+//        this.ticket = ticket;
+//    }
 
     public Long getId() {
         return id;
@@ -227,5 +348,119 @@ public class User extends AbstractAuditingEntity implements Serializable {
             ", langKey='" + langKey + '\'' +
             ", activationKey='" + activationKey + '\'' +
             "}";
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public Set<TicketAssign> getTicketAssign() {
+        return ticketAssign;
+    }
+
+    public void setTicketAssign(Set<TicketAssign> ticketAssign) {
+        this.ticketAssign = ticketAssign;
+    }
+
+    public Set<TicketUserTracker> getTicketUserTracker() {
+        return ticketUserTracker;
+    }
+
+    public void setTicketUserTracker(Set<TicketUserTracker> ticketUserTracker) {
+        this.ticketUserTracker = ticketUserTracker;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+    public Set<TicketFiles> getTicketFiles() {
+        return ticketFiles;
+    }
+
+    public void setTicketFiles(Set<TicketFiles> ticketFiles) {
+        this.ticketFiles = ticketFiles;
+    }
+
+    public String getTelno() {
+        return telno;
+    }
+
+    public void setTelno(String telno) {
+        this.telno = telno;
+    }
+
+    public Set<TicketLog> getTicketLog() {
+        return ticketLog;
+    }
+
+    public void setTicketLog(Set<TicketLog> ticketLog) {
+        this.ticketLog = ticketLog;
+    }
+
+    public Set<UserProductQA> getUserProductQA() {
+        return userProductQA;
+    }
+
+    public void setUserProductQA(Set<UserProductQA> userProductQA) {
+        this.userProductQA = userProductQA;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    @Override
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    @Override
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    @Override
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    @Override
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    @Override
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    @Override
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Set<UserProductDev> getUserProductDev() {
+        return userProductDev;
+    }
+
+    public void setUserProductDev(Set<UserProductDev> userProductDev) {
+        this.userProductDev = userProductDev;
+    }
+
+    public Set<PMProduct> getPmProduct() {
+        return pmProduct;
+    }
+
+    public void setPmProduct(Set<PMProduct> pmProduct) {
+        this.pmProduct = pmProduct;
     }
 }

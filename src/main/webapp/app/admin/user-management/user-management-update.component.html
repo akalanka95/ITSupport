@@ -1,11 +1,57 @@
+<nb-card class="mx-auto" style="width:60%">
+    <nb-card-header>
+        <h2 id="myUserLabel" style="font-size: 20px">
+            Create/Update User
+        </h2>
+    </nb-card-header>
+    <nb-card-body>
 <div class="row justify-content-center">
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
-            <h2 id="myUserLabel">
-                Create or edit a User
-            </h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
+
+                <label>Select Company</label>
+                <div class="dropdown">
+                    <button style="width: 50%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{selectCompanyName}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" (click)="selectCompany(list)" *ngFor="let list of companyList">{{list.companyName}}</a>
+                    </div>
+                </div>
+
+
+                <div class="row" [hidden]="companyDetails">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <label>Department</label>
+                            <div class="dropdown">
+                                <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{selectDepartmentName}}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <a class="dropdown-item" (click)="selectDepartment(list)" *ngFor="let list of departmentList">{{list.departmentName}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Role</label>
+
+                            <div class="dropdown">
+                                <button style="width: 100%" class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{selectRoleName}}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                    <a class="dropdown-item" (click)="selectUserRoles(list)" *ngFor="let list of selectUserRole">{{list}}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group" [hidden]="!user.id">
                     <label>ID</label>
                     <input type="text" class="form-control" name="id"
@@ -89,7 +135,15 @@
                             Your email is invalid.
                         </small>
                     </div>
+
                 </div>
+
+
+                <div class="form-group">
+                    <label>Telephone Number (7XXXXXXXX)</label>
+                    <input type="text" [(ngModel)]="user.telno" name="telno" required (keypress)="keyPress($event)" minlength=9 maxlength=9  class="form-control"  placeholder="Telephone Number">
+                </div>
+
                 <div class="form-check">
                     <label class="form-check-label" for="activated">
                         <input class="form-check-input" [disabled]="user.id === null" type="checkbox" id="activated" name="activated" [(ngModel)]="user.activated">
@@ -100,7 +154,15 @@
                 <div class="form-group">
                     <label>Profiles</label>
                     <select class="form-control" multiple name="authority" [(ngModel)]="user.authorities">
-                        <option *ngFor="let authority of authorities" [value]="authority">{{authority}}</option>
+                        <option *ngFor="let authority of authorities" [value]="authority">
+                            <span *ngIf="authority === 'ROLE_USER'; else second">ROLE_CLIENT</span>
+                            <ng-template #second>
+                                <span *ngIf="authority === 'ROLE_TEAM'; else third">ROLE_USER</span>
+                            </ng-template>
+                            <ng-template #third>
+                                {{authority}}
+                            </ng-template>
+                            </option>
                     </select>
                 </div>
             </div>
@@ -116,3 +178,5 @@
         </form>
     </div>
 </div>
+    </nb-card-body>
+</nb-card>

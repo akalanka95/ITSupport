@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, Renderer, ElementRef } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { JhiEventManager } from 'ng-jhipster';
 
 import { LoginService } from 'app/core/login/login.service';
@@ -24,6 +24,7 @@ export class JhiLoginModalComponent implements AfterViewInit {
         private elementRef: ElementRef,
         private renderer: Renderer,
         private router: Router,
+        private route: ActivatedRoute,
         public activeModal: NgbActiveModal
     ) {
         this.credentials = {};
@@ -69,6 +70,8 @@ export class JhiLoginModalComponent implements AfterViewInit {
                     this.stateStorageService.storeUrl(null);
                     this.router.navigate([redirect]);
                 }
+
+                this.router.navigate(['/dashboard'], { relativeTo: this.route });
             })
             .catch(() => {
                 this.authenticationError = true;

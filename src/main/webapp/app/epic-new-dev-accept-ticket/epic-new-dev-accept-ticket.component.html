@@ -1,0 +1,390 @@
+<!--<nb-card>-->
+    <!--<span style="color: red; font-size: 24px">{{currentLoggedUser.firstName}}</span>-->
+<!--</nb-card>-->
+<jhi-up-bar></jhi-up-bar>
+
+<nb-card style="font-size: 0.8rem;">
+
+  <nb-card-header style="font-size: 1rem;">My Open Tickets
+
+      <input class="form-control" style="float: right; margin-right: 20px; width: 20%;
+height: 28px;" type="text" [(ngModel)]="userFilter.accepted" placeholder="Ticket Status">
+
+  </nb-card-header>
+  <nb-card-body>
+
+      <div class="table-responsive">
+          <table class="table table-striped">
+              <thead>
+              <tr jhiSort >
+                  <th><span>Ticket No</span> </th>
+                  <th><span>Date/Time</span> </th>
+                  <th><span>Type</span> </th>
+                  <th><span>Status</span> </th>
+                  <th><span>Priority</span></th>
+                  <th><span>Subject</span> </th>
+                  <th><span>Current Status Age</span></th>
+                  <th><span>Ticket Age</span></th>
+                  <th><span>Action</span></th>
+              </tr>
+              </thead>
+              <tbody>
+
+              <tr *ngFor="let list of ticketAssignListByUser  | filterBy: userFilter  ">
+                  <td>
+                      <span class="badge1 badge-info">{{list.ticket.ticketNo}}</span>
+                  </td>
+                  <td>{{list.ticket.ticketDate}} - {{list.ticket.ticketTime}}</td>
+                  <td><span class="badge badge-primary">{{list.ticket.type}}</span></td>
+                  <td><span *ngIf="list.accepted === 'null'; else second" >
+                      <span>SUPPORT PENDING</span>
+                        </span>
+                  <ng-template #second>
+                      <span *ngIf="list.accepted === 'accepted'; else third" >
+                          <span>SUPPORT ACCEPTED</span>
+                      </span>
+                  </ng-template>
+                      <ng-template #third>
+                           <span *ngIf="list.accepted === 'rejected'; else fourth" >
+                          <span>SUPPORT REJECTED</span>
+                      </span>
+                      </ng-template>
+                      <ng-template #fourth>
+                           <span *ngIf="list.ticket.teamStatus === 'QA ASSIGNED BY MANAGER'; else fifth" >
+                          <span>QA ASSIGNED BY TEAM LEADER</span>
+                      </span>
+                      </ng-template>
+                      <ng-template #fifth>
+                           <span *ngIf="list.ticket.teamStatus === 'DEV ASSIGNED BY MANAGER'; else sixth" >
+                          <span>DEV ASSIGNED BY TEAM LEADER</span>
+                      </span>
+                      </ng-template>
+                      <ng-template #sixth>
+                           <span *ngIf="list.ticket.teamStatus === 'QA MANAGER REJECTED'; else seventh" >
+                          <span>QA TEAM LEADER REJECTED</span>
+                      </span>
+                      </ng-template>
+                      <ng-template #seventh>
+                           <span *ngIf="list.ticket.teamStatus === 'DEV MANAGER REJECTED'; else eight" >
+                          <span>DEV TEAM LEADER REJECTED</span>
+                      </span>
+                      </ng-template>
+                  <ng-template #eight>
+                      <span>{{list.ticket.teamStatus}}</span>
+                  </ng-template>
+                  </td>
+                  <td><span *ngIf="list.ticket.priority ==='MEDIUM'" class="badge badge-success">{{list.ticket.priority}}</span>
+                      <span *ngIf="list.ticket.priority ==='HIGH'" class="badge badge-info">{{list.ticket.priority}}</span>
+                      <span *ngIf="list.ticket.priority ==='HIGHEST'" class="badge badge-danger">{{list.ticket.priority}}</span>
+                      <span *ngIf="list.ticket.priority ==='LOW'" class="badge badge-primary">{{list.ticket.priority}}</span>
+                  </td>
+                  <td><b>{{list.ticket.subject}}</b></td>
+                  <td>{{list.ticket.currentStatusAge}}</td>
+                  <td>{{list.ticket.ticketAge}}</td>
+
+                  <span *ngIf="currentLoggedUser.department.departmentName === 'Support'">
+                  <td *ngIf="list.accepted==='SUPPORT PENDING'">
+                      <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">View Ticket</button>
+                  </td>
+                  <td *ngIf="list.accepted==='accepted'">
+                      <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">View Ticket</button>
+                  </td>
+                  <td *ngIf="list.accepted==='SUPPORT INPROGRESS'">
+                      <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">IN-PROGRESS</button>
+                  </td>
+                  <td *ngIf="list.accepted==='SUPPORT ASSIGNED TO QA'">
+                      <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]" >ASSIGNED TO QA</button>
+                  </td>
+                  <td *ngIf="list.accepted==='rejected'">
+                  <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]">Ticket Rejected</button>
+                  </td>
+                  <td *ngIf="list.accepted ==='done'">
+                      <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]">DONE</button>
+                  </td>
+                      <td *ngIf="list.accepted ==='QA MANAGER REJECTED'">
+                      <button class="btn btn-sm btn-danger" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]" >QA REJECTED</button>
+                  </td>
+                      <td *ngIf="list.accepted ==='QA DONE - SUPPORT PENDING'">
+                     <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">QA DONE</button>
+                    </td>
+                      <td *ngIf="list.accepted ==='QA DONE - SUPPORT ACCEPTED'">
+                           <span class="badge1 badge-danger">QA DONE</span>
+                                  &nbsp;&nbsp;<button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">View Ticket</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='QA DONE - SUPPORT INPROGRESS'">
+                           <span class="badge1 badge-danger">QA DONE</span>
+                                  &nbsp;&nbsp;<button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">INPROGRESS</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='TICKET REASSIGN'">
+                           <span class="badge1 badge-dark">TICKET REASSIGN</span>
+                     </td>
+                      <td *ngIf="list.accepted ==='SUPPORT ASSIGNED TO QA - HELP'">
+                          <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]">ASSIGNED TO QA</button>&nbsp;<button class="btn btn-sm btn-danger" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">HELP</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='SUPPORT DONE'">
+                          <button disabled class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">SUPPORT DONE</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='SUPPORT-DONE'">
+                          <button disabled class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">SUPPORT DONE</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='QA DONE - SUPPORT REJECTED'">
+                          <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]">QA DONE - REJECTED</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='TICKET_CLOSE'">
+                          <button class="btn btn-sm btn-dark" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">TICKET CLOSED</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='READY_FOR_TESTING'">
+                          <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">READY FOR TESTING</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='READY FOR TESTING'">
+                          <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">READY FOR TESTING</button>
+                     </td>
+                      <td *ngIf="list.accepted ==='SUPPORT WAITING FOR FEEDBACK'">
+                          <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">WAITING FOR FEEDBACK</button>
+                     </td>
+                  </span>
+
+
+                  <span *ngIf="currentLoggedUser.department.departmentName === 'QA'">
+
+                     <span *ngIf="list.accepted ==='QA ASSIGNED BY MANAGER';else second">
+                         <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">View Ticket</button>
+                     </span>
+                       <ng-template #second>
+                              <span *ngIf="list.accepted==='QA ACCEPTED';else third"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">View Ticket</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #third>
+                              <span *ngIf="list.accepted==='QA INPROGRESS';else fourth"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">IN PROGRESS</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #fourth>
+                              <span *ngIf="list.accepted==='QA REJECTED';else fifth"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]" >TICKET REJECTED</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #fifth>
+                              <span *ngIf="list.accepted==='QA ASSIGNED TO DEVELOPMENT';else sixth"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]" >QA ASSIGNED DEVELOPMENT</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #sixth>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA PENDING';else seventh"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">DEVELOPMENT DONE</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #seventh>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA ACCEPTED';else eight;"><span class="badge1 badge-danger">DEVELOPMENT DONE</span>
+                                  &nbsp;&nbsp;<button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">View Ticket</button>
+                              </span>
+                       </ng-template>
+                       <ng-template #eight>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA INPROGRESS';else nineth"><span class="badge1 badge-danger">DEVELOPMENT DONE</span>&nbsp;&nbsp;<button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">INPROGRESS</button>
+                              </span>
+                       </ng-template>
+                       <ng-template #nineth>
+                              <span *ngIf="list.accepted==='DEV MANAGER REJECTED'; else tenth"><button class="btn btn-sm btn-danger" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">DEV REJECTED</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #tenth>
+                              <span *ngIf="list.accepted==='QA DONE'; else eleventh"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]" >QA DONE</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #eleventh>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA REJECTED'; else twelveth"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]" >DEVELOPMENT DONE - QA REJECTED</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #twelveth>
+                              <span *ngIf="list.accepted==='QA DONE - SUPPORT REJECTED'; else thirteenth"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">QA DONE - SUPPORT REJECTED</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #thirteenth>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA INPROGRESS REASSIGN'; else fourteenth">
+                                  <button  (click)="acceptTicket(list)" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalAccept12">Accept</button>
+                          <button (click)="rejectTicket(list)" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal12">
+                            Reject
+                          </button>
+                              </span>
+                       </ng-template>
+                       <ng-template #fourteenth>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA ACCEPTED REASSIGN'; else fifteenth">
+                                  <button  (click)="acceptTicket(list)" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalAccept12">Accept</button>
+                          <button (click)="rejectTicket(list)" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal12">
+                            Reject
+                          </button>
+                              </span>
+                       </ng-template>
+                      <ng-template #fifteenth>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA PENDING REASSIGN'; else sixteenth">
+                                  <button  (click)="acceptTicket(list)" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalAccept12">Accept</button>
+                          <button (click)="rejectTicket(list)" type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal12">
+                            Reject
+                          </button>
+                              </span>
+                       </ng-template>
+                      <ng-template #sixteenth>
+                              <span *ngIf="list.accepted==='TICKET REASSIGN'; else seventeenth">
+                             <button class="btn btn-sm btn-success" disabled >TICKET REASSIGN</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #seventeenth>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA REASSIGN REJECTED'; else eightteenth">
+                             <button class="btn btn-sm btn-success" disabled >REJECTED</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #eightteenth>
+                              <span *ngIf="list.accepted==='TICKET_CLOSE'; else nineteenth">
+                             <button class="btn btn-sm btn-dark" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]" >TICKET_CLOSE</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #nineteenth>
+                              <span *ngIf="list.accepted==='SUPPORT ASSIGNED TO QA'">
+                             <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]"  >View Ticket</button>
+                              </span>
+                       </ng-template>
+
+
+
+
+                      <div class="modal fade" id="exampleModal12" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel123" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel123">Reject Ticket</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form name="f" role="form" novalidate  #f="ngForm">
+                                      <div class="form-group">
+                                          <label >Reason</label>
+                                          <input  name="reason" required minlength="5" type="text" class="form-control" [(ngModel)]=" ticketRejectedReason" >
+
+                                      </div>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModelQA()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal fade" id="modalAccept12" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1234" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel1234">Accept Ticket</h5>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="form-group">
+                                          <p>Are you sure you want to accept the Ticket ?</p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="acceptTicketModelQA()">Accept</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </span>
+
+
+                  <span *ngIf="currentLoggedUser.department.departmentName === 'Dev'">
+                     <span *ngIf="list.accepted ==='DEV ASSIGNED BY MANAGER';else second">
+                          <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">View Ticket</button>
+                     </span>
+                       <ng-template #second>
+                              <span *ngIf="list.accepted==='DEV ACCEPTED';else third"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">View Ticket</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #third>
+                              <span *ngIf="list.accepted==='DEV INPROGRESS';else fourth"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">IN PROGRESS</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #fourth>
+                              <span *ngIf="list.accepted==='DEV REJECTED';else fifth"> <button class="btn btn-sm btn-success" disabled >TICKET REJECTED</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #fifth>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE';else sixth"> <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/view/' , list.ticket.id,list.id]" >DEVELOPMENT DONE</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #sixth>
+                              <span *ngIf="list.accepted==='DEVELOPMENT DONE - QA REJECTED'; else seventh"> <button class="btn btn-sm btn-danger" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]" >QA REJECTED</button>
+                              </span>
+                       </ng-template>
+                       <ng-template #seventh>
+                              <span *ngIf="list.accepted==='TICKET REASSIGN'; else eightteenth">
+                             <button class="btn btn-sm btn-success" disabled >TICKET REASSIGN</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #eightteenth>
+                              <span *ngIf="list.accepted==='TICKET_CLOSE'; else nineteenth">
+                             <button class="btn btn-sm btn-dark" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]">TICKET_CLOSE</button>
+                              </span>
+                       </ng-template>
+                      <ng-template #nineteenth>
+                              <span *ngIf="list.accepted==='QA ASSIGNED TO DEVELOPMENT'">
+                             <button class="btn btn-sm btn-success" [routerLink]="['/user/ticket/process/' , list.ticket.id,list.id]"  >View Ticket</button>
+                              </span>
+                       </ng-template>
+
+                      <div class="modal fade" id="exampleModal122" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1232" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel1232">Reject Ticket</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <form name="f" role="form" novalidate  #f="ngForm">
+                                      <div class="form-group">
+                                          <label >Reason</label>
+                                          <input  name="reason" required minlength="5" type="text" class="form-control" [(ngModel)]=" ticketRejectedReason" >
+
+                                      </div>
+                                      </form>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button [disabled]="f.form.invalid" type="button" (click)="rejectTicketModelQA()" class="btn btn-primary" data-dismiss="modal">Reject</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal fade" id="modalAccept122" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel12342" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel12342">Accept Ticket</h5>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="form-group">
+                                          <p>Are you sure you want to accept the Ticket ?</p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="acceptTicketModelQA()">Accept</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                  </span>
+
+
+              </tr>
+
+              </tbody>
+          </table>
+
+      </div>
+
+  </nb-card-body>
+
+</nb-card>
+

@@ -64,5 +64,16 @@ export const userMgmtRoute: Routes = [
         resolve: {
             user: UserMgmtResolve
         }
+    },
+    {
+        path: 'user-management/qa',
+        component: UserMgmtComponent,
+        resolve: {
+            pagingParams: JhiResolvePagingParams
+        },
+        data: {
+            pageTitle: 'Users',
+            defaultSort: 'id,asc'
+        }
     }
 ];

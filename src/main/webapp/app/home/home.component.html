@@ -1,41 +1,543 @@
-<div class="row">
-    <div class="col-md-3">
-        <span class="hipster img-fluid rounded"></span>
-    </div>
-    <div class="col-md-9">
-        <h1 class="display-4">Welcome, Java Hipster!</h1>
-        <p class="lead">This is your homepage</p>
 
-        <div [ngSwitch]="isAuthenticated()">
-            <div class="alert alert-success" *ngSwitchCase="true">
-                <span id="home-logged-message" *ngIf="account"
-                   > You are logged in as user "{{account.login}}". </span>
-            </div>
+<!--Sign in ##############################################-->
+<nb-card style="padding: 10px ;">
 
-            <div class="alert alert-warning" *ngSwitchCase="false">
-                <span>If you want to </span>
-                <a class="alert-link" (click)="login()">sign in</a><span>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").</span>
-            </div>
-            <div class="alert alert-warning" *ngSwitchCase="false">
-                <span>You don't have an account yet?</span>&nbsp;
-                <a class="alert-link" routerLink="register">Register a new account</a>
+<div  [ngSwitch]="isAuthenticated()">
+
+    <!--<div *ngSwitchCase="true">-->
+
+
+        <!--<h5>DashBoard - {{currentUser.firstName}}</h5>-->
+        <!--<hr>-->
+
+        <!--<div class="row">-->
+            <!--<div class="col-md-4">-->
+                <!--<nb-card class="card card-danger" style="background: #0C3446;-->
+<!--color: #f8f1f1; font-size: 1.5rem;">-->
+                    <!--<nb-card-header style="color: #fff">My Open Tickets</nb-card-header>-->
+                    <!--<nb-card-body>{{numberOpen}}</nb-card-body>-->
+                <!--</nb-card>-->
+            <!--</div>-->
+            <!--<div class="col-md-4" >-->
+                <!--<nb-card class="card card-danger" style="background: #082105;-->
+<!--color: #f8f1f1; font-size: 1.5rem;">-->
+                    <!--<nb-card-header style="color: #fff">My In Progress Tickets</nb-card-header>-->
+                    <!--<nb-card-body>{{numberProgress}}</nb-card-body>-->
+                <!--</nb-card>-->
+            <!--</div>-->
+            <!--<div class="col-md-4">-->
+                <!--<nb-card class="card card-danger" style="background: #787F8D;-->
+<!--color: #f8f1f1; font-size: 1.5rem;">-->
+                    <!--<nb-card-header style="color: #fff">My Closed Tickets</nb-card-header>-->
+                    <!--<nb-card-body>{{numberClosed}}</nb-card-body>-->
+                <!--</nb-card>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<span *ngIf="currentUser.userRole === 'SUPERVISOR'">-->
+        <!--<div class="row">-->
+            <!--<div class="col-md-12">-->
+            <!--<nb-card >-->
+                    <!--<nb-card-header>My Tickets</nb-card-header>-->
+                    <!--<nb-card-body>-->
+
+                        <!--<span *ngIf="this.currentUser.department.departmentName === 'Support'" >-->
+                            <!--<div class="table-responsive">-->
+                            <!--<table class="table table-striped">-->
+                                <!--<thead>-->
+                                <!--<tr jhiSort >-->
+                                    <!--<th><span>Ticket No</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Date/Time</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Priority</span></th>-->
+                                    <!--<th><span>Subject</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Current Status Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Ticket Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+
+
+                                <!--<tbody *ngFor="let list of managerTicketList">-->
+                                    <!--<tr *ngIf="list.teamStatus === 'PENDING'" class='odd blink'>-->
+                                    <!--<td>-->
+                                        <!--<span class="badge1 badge-info">{{list.ticketNo}}</span>-->
+                                    <!--</td>-->
+                                    <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                    <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                    <!--<td><span>SUPPORT PENDING</span></td>-->
+                                    <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                    <!--<td><b>{{list.subject}}</b></td>-->
+                                    <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--<tr class='odd blink2' *ngIf="(list.teamStatus === 'SUPPORT INPROGRESS' || list.teamStatus === 'QA DONE - SUPPORT INPROGRESS' )" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                        <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                        <!--<td><b>{{list.subject}}</b></td>-->
+                                        <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                    <!--</tr>-->
+
+                                <!--<tr class='odd blink' *ngIf="list.teamStatus === 'ACCEPTED'" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                        <!--<td><span>SUPPORT ACCEPTED</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                        <!--<td><b>{{list.subject}}</b></td>-->
+                                        <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--<tr class='odd blink' *ngIf="(list.teamStatus === 'QA MANAGER REJECTED' || list.teamStatus === 'QA DONE' || list.teamStatus === 'QA DONE - SUPPORT ACCEPTED')" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                        <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                        <!--<td><b>{{list.subject}}</b></td>-->
+                                        <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--</tbody>-->
+                            <!--</table>-->
+                        <!--</div>-->
+                        <!--</span>-->
+                        <!--<span *ngIf="this.currentUser.department.departmentName === 'QA'" >-->
+                            <!--<div class="table-responsive">-->
+                            <!--<table class="table table-striped">-->
+                                <!--<thead>-->
+                                <!--<tr jhiSort >-->
+                                    <!--<th><span>Ticket No</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Date/Time</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Priority</span></th>-->
+                                    <!--<th><span>Subject</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Current Status Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Ticket Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+
+
+                                <!--<tbody *ngFor="let list of managerTicketList">-->
+                                    <!--<tr *ngIf="(list.teamStatus === 'SUPPORT ASSIGNED TO QA' || list.teamStatus === 'QA REJECTED')" class='odd blink'>-->
+                                    <!--<td>-->
+                                        <!--<span class="badge badge-info">{{list.ticketNo}}</span>-->
+                                    <!--</td>-->
+                                    <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                    <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                    <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                    <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                    <!--<td><b>{{list.subject}}</b></td>-->
+                                    <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--<tr class='odd blink2' *ngIf="(list.teamStatus === 'QA INPROGRESS' || list.teamStatus === 'DEVELOPMENT DONE - QA INPROGRESS')" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge badge-info">{{list.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                        <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                        <!--<td><b>{{list.subject}}</b></td>-->
+                                        <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                    <!--</tr>-->
+
+                                <!--<tr class='odd blink' *ngIf="(list.teamStatus === 'QA ASSIGNED BY MANAGER' || list.teamStatus === 'QA ACCEPTED'-->
+                                 <!--|| list.teamStatus === 'QA DONE - SUPPORT REJECTED'  || list.teamStatus === 'DEV MANAGER REJECTED' || list.teamStatus === 'DEVELOPMENT DONE'-->
+                                 <!--|| list.teamStatus === 'DEVELOPMENT DONE - QA ACCEPTED')" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge badge-info">{{list.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                        <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                        <!--<td><b>{{list.subject}}</b></td>-->
+                                        <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--</tbody>-->
+                            <!--</table>-->
+                        <!--</div>-->
+                        <!--</span>-->
+                        <!--<span *ngIf="this.currentUser.department.departmentName === 'Dev'" >-->
+                            <!--<div class="table-responsive">-->
+                            <!--<table class="table table-striped">-->
+                                <!--<thead>-->
+                                <!--<tr jhiSort >-->
+                                    <!--<th><span>Ticket No</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Date/Time</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Priority</span></th>-->
+                                    <!--<th><span>Subject</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Current Status Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Ticket Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+
+
+                                <!--<tbody *ngFor="let list of managerTicketList">-->
+                                    <!--<tr *ngIf="(list.teamStatus === 'QA ASSIGNED TO DEVELOPMENT')" class='odd blink'>-->
+                                    <!--<td>-->
+                                        <!--<span class="badge badge-info">#T000{{list.ticketNo}}</span>-->
+                                    <!--</td>-->
+                                    <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                    <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                    <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                    <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                    <!--<td><b>{{list.subject}}</b></td>-->
+                                    <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--<tr class='odd blink2' *ngIf="list.teamStatus === 'DEV INPROGRESS'" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge badge-info">#T000{{list.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                        <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                        <!--<td><b>{{list.subject}}</b></td>-->
+                                        <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                    <!--</tr>-->
+
+                                <!--<tr class='odd blink' *ngIf="(list.teamStatus === 'DEV ASSIGNED BY MANAGER'-->
+                                <!--|| list.teamStatus === 'DEV ACCEPTED' || list.teamStatus === 'DEVELOPMENT DONE - QA REJECTED')" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge badge-info">#T000{{list.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                        <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                        <!--<td><b>{{list.subject}}</b></td>-->
+                                        <!--<td>{{list.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--</tbody>-->
+                            <!--</table>-->
+                        <!--</div>-->
+                        <!--</span>-->
+
+                    <!--</nb-card-body>-->
+            <!--</nb-card>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;<div class="col-md-4">&ndash;&gt;-->
+                <!--&lt;!&ndash;<nb-calendar [(date)]="date"></nb-calendar>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--</div>-->
+        <!--</span>-->
+
+        <!--<span *ngIf="currentUser.userRole === 'USER'">-->
+            <!--<div class="row">-->
+            <!--<div class="col-md-12">-->
+            <!--<nb-card>-->
+                    <!--<nb-card-header>My Tickets</nb-card-header>-->
+                    <!--<nb-card-body>-->
+                        <!--<div class="table-responsive">-->
+                            <!--<table class="table table-striped">-->
+                                <!--<thead>-->
+                                <!--<tr jhiSort >-->
+                                    <!--<th><span>Ticket No</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Date/Time</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Priority</span></th>-->
+                                    <!--<th><span>Subject</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Current Status Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Ticket Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody *ngFor="let list of ticketAssignListByUser">-->
+
+                                <!--<tr *ngIf="list.accepted === 'accepted'" class='odd blink'>-->
+                                    <!--<td>-->
+                                        <!--<span class="badge1 badge-info">{{list.ticket.ticketNo}}</span>-->
+                                    <!--</td>-->
+                                    <!--<td>{{list.ticket.ticketDate}} - {{list.ticket.ticketTime}}</td>-->
+                                    <!--<td><span class="badge badge-primary">{{list.ticket.type}}</span></td>-->
+                                    <!--<td><span>SUPPORT ACCEPTED</span></td>-->
+                                    <!--<td><span class="badge badge-danger">{{list.ticket.priority}}</span></td>-->
+                                    <!--<td><b>{{list.ticket.subject}}</b></td>-->
+                                    <!--<td>{{list.ticket.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticket.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--<tr class='odd blink2' *ngIf="(list.accepted === 'SUPPORT INPROGRESS' || list.accepted === 'QA INPROGRESS' || list.accepted === 'DEV INPROGRESS' || list.accepted === 'QA DONE - SUPPORT INPROGRESS'-->
+                                 <!--|| list.accepted === 'DEVELOPMENT DONE - QA INPROGRESS') " >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticket.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticket.ticketDate}} - {{list.ticket.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.ticket.type}}</span></td>-->
+                                        <!--<td><span>{{list.accepted}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.ticket.priority}}</span></td>-->
+                                        <!--<td><b>{{list.ticket.subject}}</b></td>-->
+                                        <!--<td>{{list.ticket.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticket.ticketAge}}</td>-->
+                                    <!--</tr>-->
+
+                                <!--<tr class='odd blink' *ngIf="list.accepted === 'null'" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticket.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticket.ticketDate}} - {{list.ticket.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.ticket.type}}</span></td>-->
+                                        <!--<td><span>SUPPORT PENDING</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.ticket.priority}}</span></td>-->
+                                        <!--<td><b>{{list.ticket.subject}}</b></td>-->
+                                        <!--<td>{{list.ticket.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticket.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--<tr class='odd blink' *ngIf="list.accepted === 'QA MANAGER REJECTED'" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticket.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticket.ticketDate}} - {{list.ticket.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.ticket.type}}</span></td>-->
+                                        <!--<td><span>{{list.ticket.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.ticket.priority}}</span></td>-->
+                                        <!--<td><b>{{list.ticket.subject}}</b></td>-->
+                                        <!--<td>{{list.ticket.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticket.ticketAge}}</td>-->
+                                <!--</tr>-->
+                                <!--<tr class='odd blink' *ngIf="(list.accepted === 'QA ASSIGNED BY MANAGER' || list.accepted === 'DEV ASSIGNED BY MANAGER' || list.accepted === 'QA ACCEPTED'-->
+                                <!--|| list.accepted === 'DEV ACCEPTED' || list.accepted === 'QA DONE - SUPPORT PENDING' || list.accepted === 'QA DONE - SUPPORT ACCEPTED'-->
+                                <!--|| list.accepted === 'DEV MANAGER REJECTED' || list.accepted === 'DEVELOPMENT DONE - QA PENDING'-->
+                                <!--|| list.accepted === 'DEVELOPMENT DONE - QA ACCEPTED')" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticket.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticket.ticketDate}} - {{list.ticket.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.ticket.type}}</span></td>-->
+                                        <!--<td><span>{{list.ticket.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.ticket.priority}}</span></td>-->
+                                        <!--<td><b>{{list.ticket.subject}}</b></td>-->
+                                        <!--<td>{{list.ticket.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticket.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--</tbody>-->
+                            <!--</table>-->
+
+                            <!--<span *ngIf="currentUser.department.departmentName === 'QA'">-->
+                                 <!--<table class="table table-striped">-->
+                                <!--<tbody *ngFor="let list of ticketAssignListByUser">-->
+
+                                <!--<tr class='odd blink' *ngIf="(list.accepted === 'QA DONE - SUPPORT REJECTED')" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticket.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticket.ticketDate}} - {{list.ticket.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.ticket.type}}</span></td>-->
+                                        <!--<td><span>{{list.ticket.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.ticket.priority}}</span></td>-->
+                                        <!--<td><b>{{list.ticket.subject}}</b></td>-->
+                                        <!--<td>{{list.ticket.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticket.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--</tbody>-->
+                            <!--</table>-->
+                            <!--</span>-->
+
+                            <!--<span *ngIf="currentUser.department.departmentName === 'Dev'">-->
+                                 <!--<table class="table table-striped">-->
+                                <!--<tbody *ngFor="let list of ticketAssignListByUser">-->
+
+                                <!--<tr class='odd blink' *ngIf="(list.accepted === 'DEVELOPMENT DONE - QA REJECTED')" >-->
+                                        <!--<td>-->
+                                            <!--<span class="badge1 badge-info">{{list.ticket.ticketNo}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td>{{list.ticket.ticketDate}} - {{list.ticket.ticketTime}}</td>-->
+                                        <!--<td><span class="badge badge-primary">{{list.ticket.type}}</span></td>-->
+                                        <!--<td><span>{{list.ticket.teamStatus}}</span></td>-->
+                                        <!--<td><span class="badge badge-danger">{{list.ticket.priority}}</span></td>-->
+                                        <!--<td><b>{{list.ticket.subject}}</b></td>-->
+                                        <!--<td>{{list.ticket.currentStatusAge}}</td>-->
+                                    <!--<td>{{list.ticket.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+                                <!--</tbody>-->
+                            <!--</table>-->
+                            <!--</span>-->
+
+                        <!--</div>-->
+                    <!--</nb-card-body>-->
+            <!--</nb-card>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;<div class="col-md-4">&ndash;&gt;-->
+                <!--&lt;!&ndash;<nb-calendar [(date)]="date"></nb-calendar>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--</div>-->
+        <!--</span>-->
+
+        <!--<span *ngIf="currentUser.userRole === 'CLIENT'">-->
+        <!--<div class="row">-->
+            <!--<div class="col-md-12">-->
+            <!--<nb-card >-->
+                    <!--<nb-card-header>My Tickets</nb-card-header>-->
+                    <!--<nb-card-body>-->
+                        <!--<div class="table-responsive">-->
+                            <!--<table class="table table-striped">-->
+                                <!--<thead>-->
+                                <!--<tr jhiSort >-->
+                                    <!--<th><span>Ticket No</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Date/Time</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Status</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Priority</span></th>-->
+                                    <!--<th><span>Subject</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Current Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                    <!--<th><span>Ticket Age</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+                                <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody *ngFor="let list of managerTicketList">-->
+
+                                 <!--<tr>-->
+                                    <!--<td>-->
+                                        <!--<span class="badge1 badge-info">{{list.ticketNo}}</span>-->
+                                    <!--</td>-->
+                                    <!--<td>{{list.ticketDate}} - {{list.ticketTime}}</td>-->
+                                    <!--<td><span class="badge badge-primary">{{list.type}}</span></td>-->
+                                    <!--<td><span>{{list.teamStatus}}</span></td>-->
+                                    <!--<td><span class="badge badge-danger">{{list.priority}}</span></td>-->
+                                    <!--<td><b>{{list.subject}}</b></td>-->
+                                     <!--<td><b>{{list.currentStatusAge}}</b></td>-->
+                                    <!--<td>{{list.ticketAge}}</td>-->
+                                <!--</tr>-->
+
+
+                                <!--&lt;!&ndash;<tr *ngIf="list.teamStatus === 'PENDING'" >&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<span class="badge badge-info">#T000{{list.ticketNo}}</span>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td>{{list.ticketDate}} - {{list.ticketTime}}</td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td><span class="badge badge-primary">{{list.type}}</span></td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td><span>SUPPORT PENDING</span></td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td><span class="badge badge-danger">{{list.priority}}</span></td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td><b>{{list.subject}}</b></td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td>{{list.ticketAge}}</td>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+
+
+                                <!--&lt;!&ndash;<tr class='odd blink2' *ngIf="(list.teamStatus !== 'PENDING' && list.teamStatus !== 'CLOSE' )" >&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<td>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<span class="badge badge-info">#T000{{list.ticketNo}}</span>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<td>{{list.ticketDate}} - {{list.ticketTime}}</td>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<td><span class="badge badge-primary">{{list.type}}</span></td>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<td><span>INPROGRESS</span></td>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<td><span class="badge badge-danger">{{list.priority}}</span></td>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<td><b>{{list.subject}}</b></td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td>{{list.ticketAge}}</td>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+
+                                <!--</tbody>-->
+                            <!--</table>-->
+                        <!--</div>-->
+                    <!--</nb-card-body>-->
+            <!--</nb-card>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;<div class="col-md-4">&ndash;&gt;-->
+                <!--&lt;!&ndash;<nb-calendar [(date)]="date"></nb-calendar>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--</div>-->
+        <!--</span>-->
+
+
+    <!--</div>-->
+
+    <div *ngSwitchCase="false">
+        <nb-card>
+            <nb-card-body>
+        <div class="modal-header">
+            <h4 class="modal-title">Sign in</h4>
+            <!--<button aria-label="Close" data-dismiss="modal" class="close" type="button" (click)="activeModal.dismiss('closed')"><span aria-hidden="true">x</span>-->
+            <!--</button>-->
+        </div>
+        <div class="modal-body">
+            <div class="row justify-content-right">
+                <!--<div class="col-md-5">-->
+                <!--<div class="alert alert-danger" *ngIf="authenticationError">-->
+                <!--<strong>Failed to sign in!</strong> Please check your credentials and try again.-->
+                <!--</div>-->
+                <!--</div>-->
+                <div class="col-md-8">
+                    <img style="height:80%; width: 90%" src="../../content/images/Epic-Lanka.jpg">
+                </div>
+                <div class="col-md-4" style="margin-top: 5%">
+                    <div class="alert alert-danger" *ngIf="authenticationError">
+                        <strong>Failed to sign in!</strong> Please check your credentials and try again.
+                    </div>
+                    <form class="form" role="form" (ngSubmit)="login()">
+                        <div class="form-group">
+                            <label class="username-label" for="username">Login</label>
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Your username"
+                                   [(ngModel)]="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Your password"
+                                   [(ngModel)]="password">
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label" for="rememberMe">
+                                <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" [(ngModel)]="rememberMe" checked>
+                                <span>Remember me</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Sign in</button>
+                    </form>
+                    <p></p>
+                    <div class="alert alert-warning">
+                        <a class="alert-link" (click)="requestResetPassword()">Did you forget your password?</a>
+                    </div>
+
+
+                    <!--<nb-card>-->
+                        <!--<nb-card-body>-->
+                            <!--<h6>Date - 2/15/2019</h6>-->
+                            <!--<h6>Review By - Mr Nuwan Sanjeewa</h6>-->
+                            <!--<h6>Assign To Public - Mr Samindha Jayawardena </h6>-->
+                            <!--<h6>Designed By - Akalanka </h6>-->
+                            <!--<h6>Version - V1.0</h6>-->
+                        <!--</nb-card-body>-->
+                    <!--</nb-card>-->
+
+                    <!--<div class="alert alert-warning">-->
+                    <!--<span>You don't have an account yet?</span>-->
+                    <!--<a class="alert-link" (click)="register()">Register a new account</a>-->
+                    <!--</div>-->
+                </div>
             </div>
         </div>
-
-        <p>
-            If you have any question on JHipster:
-        </p>
-
-        <ul>
-            <li><a href="https://www.jhipster.tech/" target="_blank" rel="noopener">JHipster homepage</a></li>
-            <li><a href="http://stackoverflow.com/tags/jhipster/info" target="_blank" rel="noopener">JHipster on Stack Overflow</a></li>
-            <li><a href="https://github.com/jhipster/generator-jhipster/issues?state=open" target="_blank" rel="noopener">JHipster bug tracker</a></li>
-            <li><a href="https://gitter.im/jhipster/generator-jhipster" target="_blank" rel="noopener">JHipster public chat room</a></li>
-            <li><a href="https://twitter.com/java_hipster" target="_blank" rel="noopener">follow @java_hipster on Twitter</a></li>
-        </ul>
-
-        <p>
-            <span>If you like JHipster, don't forget to give us a star on</span> <a href="https://github.com/jhipster/generator-jhipster" target="_blank" rel="noopener">GitHub</a>!
-        </p>
+            </nb-card-body>
+        </nb-card>
     </div>
 </div>
+
+</nb-card>

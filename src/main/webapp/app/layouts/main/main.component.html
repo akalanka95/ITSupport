@@ -1,11 +1,151 @@
-<jhi-page-ribbon></jhi-page-ribbon>
-<div>
-    <router-outlet name="navbar"></router-outlet>
-</div>
-<div class="container-fluid">
-    <div class="card jh-card">
-        <router-outlet></router-outlet>
-        <router-outlet name="popup"></router-outlet>
-    </div>
-    <jhi-footer></jhi-footer>
-</div>
+
+
+<nb-layout>
+
+    <nb-layout-column >
+        <div class="row" style="height: 100%;">
+            <div class="col-md-12">
+                <div class="d-flex" id="wrapper" style="font-size: 0.8rem;height: 100%;">
+
+                <!--<span *jhiHasAnyAuthority="'ROLE_USER'">-->
+                 <span *jhiHasAnyAuthority="'ROLE_USER'">
+                    <div class="bg-light border-right"   id="sidebar-wrapper" style="height: 100%;">
+                    <div class="sidebar-heading"><span class="logo-img"></span></div>
+                    <div class="list-group list-group-flush" style="font-family: 'Montserrat', sans-serif;font-size: 0.8rem;">
+
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'" routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+                <a *jhiHasAnyAuthority="'ROLE_ADMIN'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+                <a *jhiHasAnyAuthority="'ROLE_TEAM'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+                <a *jhiHasAnyAuthority="'ROLE_MANAGER'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="/manager/ticketDetails" class="list-group-item list-group-item-action bg-light">Ticket Details</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_MANAGER'"  routerLink="/manager/ticketDetails" class="list-group-item list-group-item-action bg-light">Ticket Details</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'"  routerLink="user/createTicket" class="list-group-item list-group-item-action bg-light">Create New Ticket</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'"  routerLink="user/viewTicket" class="list-group-item list-group-item-action bg-light">View/Edit Ticket</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM'"  routerLink="team/ticketAction" class="list-group-item list-group-item-action bg-light">Accept/Reject Ticket</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'"  routerLink="settings" class="list-group-item list-group-item-action bg-light">User Profile</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'"  routerLink="password" class="list-group-item list-group-item-action bg-light">Change Password</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'"  (click)="logout()" class="list-group-item list-group-item-action bg-light">Sign out</a>
+            </div>
+                </div>
+
+                </span>
+
+                 <span *jhiHasAnyAuthority="'ROLE_TEAM'">
+                    <div class="bg-light border-right"   id="sidebar-wrapper1" style="height: 100%;">
+                    <div class="sidebar-heading"><span class="logo-img"></span></div>
+                    <div class="list-group list-group-flush" style="font-family: 'Montserrat', sans-serif;font-size: 0.8rem;">
+
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'" routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+                <a *jhiHasAnyAuthority="'ROLE_ADMIN'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+                <a *jhiHasAnyAuthority="'ROLE_TEAM'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+                <a *jhiHasAnyAuthority="'ROLE_MANAGER'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="/manager/ticketDetails" class="list-group-item list-group-item-action bg-light">Ticket Details</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_MANAGER'"  routerLink="/manager/ticketDetails" class="list-group-item list-group-item-action bg-light">Ticket Details</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'"  routerLink="user/createTicket" class="list-group-item list-group-item-action bg-light">Create New Ticket</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_USER'"  routerLink="user/viewTicket" class="list-group-item list-group-item-action bg-light">View/Edit Ticket</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM'"  routerLink="team/ticketAction" class="list-group-item list-group-item-action bg-light">Accept/Reject Ticket</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM'"  routerLink="settings" class="list-group-item list-group-item-action bg-light">User Profile</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM'"  routerLink="password" class="list-group-item list-group-item-action bg-light">Change Password</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM'"  (click)="logout()" class="list-group-item list-group-item-action bg-light">Sign out</a>
+
+            </div>
+                </div>
+
+                </span>
+
+                 <span *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'">
+                    <div class="bg-light border-right"   id="sidebar-wrapper2" style="height: 100%;">
+                    <div class="sidebar-heading"><span class="logo-img"></span></div>
+                    <div class="list-group list-group-flush" style="font-family: 'Montserrat', sans-serif;font-size: 0.8rem;">
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="/manager/ticketDetails" class="list-group-item list-group-item-action bg-light">Ticket Details</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="settings" class="list-group-item list-group-item-action bg-light">User Profile</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="password" class="list-group-item list-group-item-action bg-light">Change Password</a>
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="/epic/user-management" class="list-group-item list-group-item-action bg-light">User Management</a>
+
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  routerLink="/assign/products/QA" class="list-group-item list-group-item-action bg-light">Assign Products</a>
+
+
+                <a *jhiHasAnyAuthority="'ROLE_TEAM_SUPERVISOR'"  (click)="logout()" class="list-group-item list-group-item-action bg-light">Sign out</a>
+
+
+            </div>
+                </div>
+
+                </span>
+
+                 <span *jhiHasAnyAuthority="'ROLE_PROJECT_MANAGER'">
+                    <div class="bg-light border-right"   id="sidebar-wrapper23" style="height: 100%;">
+                    <div class="sidebar-heading"><span class="logo-img"></span></div>
+                    <div class="list-group list-group-flush" style="font-family: 'Montserrat', sans-serif;font-size: 0.8rem;">
+
+                        <a *jhiHasAnyAuthority="'ROLE_PROJECT_MANAGER'"  routerLink="/dashboard" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+
+                        <a *jhiHasAnyAuthority="'ROLE_PROJECT_MANAGER'"  routerLink="/list/ticketList" class="list-group-item list-group-item-action bg-light">Ticket Details</a>
+
+                        <a *jhiHasAnyAuthority="'ROLE_PROJECT_MANAGER'"  routerLink="settings" class="list-group-item list-group-item-action bg-light">User Profile</a>
+
+                         <a *jhiHasAnyAuthority="'ROLE_PROJECT_MANAGER'"  routerLink="password" class="list-group-item list-group-item-action bg-light">Change Password</a>
+
+
+                        <a *jhiHasAnyAuthority="'ROLE_PROJECT_MANAGER'"  (click)="logout()" class="list-group-item list-group-item-action bg-light">Sign out</a>
+
+
+                </div>
+                </div>
+
+                </span>
+
+
+                <div id="page-content-wrapper">
+                        <div class="container-fluid">
+
+                            <span *jhiHasAnyAuthority="'ROLE_ADMIN'">
+
+                                <router-outlet name="navbar"></router-outlet>
+
+                            </span>
+                            <router-outlet></router-outlet>
+
+                            <router-outlet name="popup"></router-outlet>
+
+                            <jhi-footer></jhi-footer>
+
+                        </div>
+                </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </nb-layout-column>
+</nb-layout>
+
+
